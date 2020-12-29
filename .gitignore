@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# IDE/text editor settings
+.vscode/
+
+# Databases
+*.db
