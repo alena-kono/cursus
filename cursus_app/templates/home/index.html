@@ -1,9 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
-    <div class="starter-template text-center py-5 px-3">
-        {% for block in blocks %}
-        <h1><a href="/{{ block.lower() }}">Browse By {{ block }}</a></h1>
-        <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
-        {% endfor %}
+    <div class="row justify-content-md-center">
+        <div class="col-md-auto">
+            <div class="starter-template text-center py-5 px-3">
+                {% for block in blocks %}
+                <h1><a href="/{{ block.lower() }}">Browse By {{ block }}</a></h1>
+                <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
+                {% endfor %}
+            </div>
+        </div>
+
     </div>
+
 {% endblock %}
