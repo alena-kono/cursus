@@ -4,7 +4,7 @@ home_blueprint = Blueprint("home", __name__)
 
 
 @home_blueprint.route("/")
-def home_index():
+def index():
     page_title = "Cursus - Home page"
     blocks_to_display = [
         "Topics",
