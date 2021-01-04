@@ -21,7 +21,7 @@
 
         <div class="col-md-6">
           <div class="card bg-light mb-3 text-center">
-            <img src="images/home-courses.jpg" class="card-img-fluid" alt="img" style="height: 250px;">
+            <img src="{{ url_for('static', filename='images/home-courses.jpg') }}" class="card-img-fluid" alt="img" style="height: 250px;">
             <div class="card-img-overlay">
                 <div class="card-body">
                     <h1 class="text-light" style="font-size: 64px;">Browse courses</h1>
@@ -33,7 +33,7 @@
 
         <div class="col-md-6">
           <div class="card bg-light mb-3 text-center">
-            <img src="images/home-topics.jpg" class="card-img-fluid" alt="img" style="height: 250px;">
+            <img src="{{ url_for('static', filename='images/home-topics.jpg') }}" class="card-img-fluid" alt="img" style="height: 250px;">
             <div class="card-img-overlay">
                 <div class="card-body">
                     <h1 class="text-light" style="font-size: 64px;">Browse topics</h1>
