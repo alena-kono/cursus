@@ -15,7 +15,8 @@ def login():
     return render_template(
         "auth/login.html",
         page_title=page_title,
-        form=login_form
+        form=login_form,
+        auth_btn=url_for("login.login")
     )
 
 
