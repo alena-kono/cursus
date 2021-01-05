@@ -11,10 +11,10 @@ def index():
         "Topics",
         "Courses"
     ]
-    auth_btn = get_auth_navbar_btn()
+    auth_btns = get_auth_navbar_btn()
     return render_template(
         "home/index.html",
         page_title=page_title,
         blocks=blocks_to_display,
-        auth_btn=auth_btn
+        auth_btns=auth_btns
     )
