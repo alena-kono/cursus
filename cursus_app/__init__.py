@@ -3,7 +3,7 @@ from flask_login import LoginManager
 
 from cursus_app.db import db
 from cursus_app.home.views import home_blueprint
-from cursus_app.auth.views import login_blueprint
+from cursus_app.auth.views import auth_blueprint
 from cursus_app.user.models import User
 
 
@@ -17,9 +17,9 @@ def create_app():
     db.init_app(app)
     login_manager = LoginManager()
     login_manager.init_app(app)
-    login_manager.login_view = "auth.login"
+    login_manager.login_view = "auth.views"
     app.register_blueprint(home_blueprint)
-    app.register_blueprint(login_blueprint)
+    app.register_blueprint(auth_blueprint)
 
     @login_manager.user_loader
     def load_user(user_id):

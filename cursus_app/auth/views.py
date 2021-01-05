@@ -3,10 +3,10 @@ from cursus_app.user.models import User
 from flask import Blueprint, flash, redirect, render_template, url_for
 from flask_login import current_user, login_user, logout_user
 
-login_blueprint = Blueprint("login", __name__)
+auth_blueprint = Blueprint("auth", __name__)
 
 
-@login_blueprint.route("/login/")
+@auth_blueprint.route("/login/")
 def login():
     if current_user.is_authenticated:
         return redirect(url_for("home.index"))
@@ -16,11 +16,11 @@ def login():
         "auth/login.html",
         page_title=page_title,
         form=login_form,
-        auth_btn=url_for("login.login")
+        auth_btn=url_for("auth.login")
     )
 
 
-@login_blueprint.route("/process-login/", methods=["POST"])
+@auth_blueprint.route("/process-login/", methods=["POST"])
 def process_login():
     form = LoginForm()
     if form.validate_on_submit():
@@ -32,10 +32,10 @@ def process_login():
             flash("Successful login")
             return redirect(url_for("home.index"))
     flash("Incorrect username or password")
-    return redirect(url_for("login.login"))
+    return redirect(url_for("auth.login"))
 
 
-@login_blueprint.route("/logout/")
+@auth_blueprint.route("/logout/")
 def logout():
     logout_user()
     flash("Successful logout")

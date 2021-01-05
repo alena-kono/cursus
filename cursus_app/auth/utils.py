@@ -8,7 +8,7 @@ def get_auth_navbar_btn() -> namedtuple:
     auth_navbar_btn = namedtuple("auth_navbar_btn", ["btn", "link"])
     current_auth_navbar_btn = auth_navbar_btn(
         btn="Log In",
-        link=url_for("login.login")
+        link=url_for("auth.login")
     )
     if current_user.is_authenticated:
         current_auth_navbar_btn = auth_navbar_btn(
