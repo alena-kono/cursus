@@ -3,50 +3,48 @@
 
 <section class="py-5 text-center container">
     <div class="row py-lg-5">
-      <div class="col-lg-6 col-md-8 mx-auto">
-        <h1 class="fw-light">Welcome to Cursus</h1>
-        <p class="lead text-muted">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don’t simply skip over it entirely.</p>
-        <p>
-          <a href="{{ url_for('auth.login') }}" class="btn btn-primary my-2">Log In</a>
-          <a href="{{ url_for('auth.signup') }}" class="btn btn-secondary my-2">Sign Up</a>
-        </p>
-      </div>
+        <div class="col-lg-6 col-md-8 mx-auto">
+            <h1 class="fw-light">Welcome to Cursus</h1>
+            <p class="lead text-muted">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don’t simply skip over it entirely.</p>
+            <p>
+                <a href="{{ url_for('auth.login') }}" class="btn btn-primary my-2">Log In</a>
+                <a href="{{ url_for('auth.signup') }}" class="btn btn-secondary my-2">Sign Up</a>
+            </p>
+        </div>
     </div>
-  </section>
+</section>
 
-  <div class="album py-5 bg-light">
-    <div class="container">
+    <div class="album py-5 bg-light">
+        <div class="container">
 
-      <div class="row">
+            <div class="row">
 
-        <div class="col-md-6">
-          <div class="card bg-light mb-3 text-center">
-            <img src="{{ url_for('static', filename='images/home-courses.jpg') }}" class="card-img-fluid" alt="img" style="height: 250px;">
-            <div class="card-img-overlay">
-                <div class="card-body">
-                    <h1 class="text-light" style="font-size: 64px;">Browse courses</h1>
-                    <a href="{{url_for('course.index')}}" class="stretched-link"></a>
+                <div class="col-md-6">
+                    <div class="card bg-light mb-3 text-center">
+                        <img src="{{ url_for('static', filename='images/home-courses.jpg') }}" class="card-img-fluid" alt="img" style="height: 250px;">
+                        <div class="card-img-overlay">
+                            <div class="card-body">
+                                <h1 class="text-light" style="font-size: 64px;">Browse courses</h1>
+                                <a href="{{url_for('course.index')}}" class="stretched-link"></a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-          </div>
-        </div>
 
-        <div class="col-md-6">
-          <div class="card bg-light mb-3 text-center">
-            <img src="{{ url_for('static', filename='images/home-topics.jpg') }}" class="card-img-fluid" alt="img" style="height: 250px;">
-            <div class="card-img-overlay">
-                <div class="card-body">
-                    <h1 class="text-light" style="font-size: 64px;">Browse topics</h1>
-                    <a href="{{url_for('course.topics')}}" class="stretched-link"></a>
+                <div class="col-md-6">
+                    <div class="card bg-light mb-3 text-center">
+                        <img src="{{ url_for('static', filename='images/home-topics.jpg') }}" class="card-img-fluid" alt="img" style="height: 250px;">
+                        <div class="card-img-overlay">
+                            <div class="card-body">
+                                <h1 class="text-light" style="font-size: 64px;">Browse topics</h1>
+                                <a href="{{url_for('course.topics')}}" class="stretched-link"></a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-          </div>
-        </div>
 
-          </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 
 {% endblock %}
