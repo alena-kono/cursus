@@ -29,3 +29,19 @@ def topics():
         auth_btns=auth_btns,
         topics=topics
     )
+
+
+@course_blueprint.route("/topics/<topic_name>")
+def courses_in_topic(topic_name):
+    page_title = f"Cursus - {topic_name}"
+    auth_btns = get_auth_navbar_btn()
+    courses_in_topic = Course.query.filter(
+        Course.topics.any(Topic.name == topic_name)
+        )
+    return render_template(
+        "course/courses_in_topic.html",
+        page_title=page_title,
+        auth_btns=auth_btns,
+        courses_in_topic=courses_in_topic,
+        topic_name=topic_name
+    )
