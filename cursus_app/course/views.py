@@ -1,6 +1,8 @@
 from cursus_app.auth.utils import get_auth_navbar_btn
 from cursus_app.course.models import Course, Topic
-from flask import Blueprint, flash, redirect, render_template, url_for
+from cursus_app.lesson.models import Lesson
+from flask import Blueprint, render_template
+from flask_login import login_required
 
 course_blueprint = Blueprint("course", __name__, url_prefix="/courses")
 
@@ -44,4 +46,20 @@ def courses_in_topic(topic_name):
         auth_btns=auth_btns,
         courses_in_topic=courses_in_topic,
         topic_name=topic_name
+    )
+
+
+@course_blueprint.route("/<int:course_id>")
+@login_required
+def lessons_in_course(course_id):
+    page_title = "Cursus - lessons"
+    auth_btns = get_auth_navbar_btn()
+    lessons_in_course = Lesson.query.join(Course).filter(
+        Course.id == Lesson.course
+        ).filter(Course.id == course_id).all()
+    return render_template(
+        "course/lessons_in_course.html",
+        page_title=page_title,
+        auth_btns=auth_btns,
+        lessons_in_course=lessons_in_course
     )
