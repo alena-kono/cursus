@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section>
+    <div class="container text-center py-4">
+        <div class="row mt-lg-5">
+            <div class="col">
+                <h1 class="display-4">Topics</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="album py-3 bg-light">
+<div class="container">
+
+    <div class="row">
+    {% for topic in topics %}
+    <div class="col-md-3">
+        <div class="card md-light mb-3 text-center">
+        <img src="{{ url_for('static', filename='images/course-topics.jpg') }}" class="card-img-fluid" alt="img">
+        <div class="card-img-top">
+            <div class="card-body">
+                <h4 class="text-light">{{ topic.name }}</h4>
+                <a href="/topics/{{ topic.id }}" class="stretched-link"></a>
+            </div>
+        </div>
+        </div>
+    </div>
+    {% endfor %}
+
+        </div>
+    </div>
+    </div>
+</div>
+</div>
+
+{% endblock %}

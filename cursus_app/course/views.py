@@ -1,5 +1,5 @@
 from cursus_app.auth.utils import get_auth_navbar_btn
-from cursus_app.course.models import Course
+from cursus_app.course.models import Course, Topic
 from flask import Blueprint, flash, redirect, render_template, url_for
 
 course_blueprint = Blueprint("course", __name__, url_prefix="/courses")
@@ -15,4 +15,17 @@ def index():
         page_title=page_title,
         auth_btns=auth_btns,
         courses=courses
+    )
+
+
+@course_blueprint.route("/topics/")
+def topics():
+    page_title = "Cursus - all topics"
+    auth_btns = get_auth_navbar_btn()
+    topics = Topic.query.all()
+    return render_template(
+        "course/topics.html",
+        page_title=page_title,
+        auth_btns=auth_btns,
+        topics=topics
     )
