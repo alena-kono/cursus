@@ -72,7 +72,9 @@ def process_signup():
                 username=form.username.data,
                 password=form.password_1.data
                 )
-            flash("You've successfully signed up for Cursus!")
-            return redirect(url_for("home.index"))
+            flash(
+                "You've successfully signed up for Cursus!\nPlease log in."
+                )
+            return redirect(url_for("auth.login"))
     flash("Passwords do not match. Please try again.")
     return redirect(url_for("auth.signup"))
