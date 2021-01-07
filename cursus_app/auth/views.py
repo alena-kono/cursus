@@ -1,4 +1,4 @@
-from cursus_app.auth.forms import LoginForm
+from cursus_app.auth.forms import LoginForm, SignupForm
 from cursus_app.user.models import User
 from cursus_app.auth.utils import get_auth_navbar_btn
 from flask import Blueprint, flash, redirect, render_template, url_for
@@ -42,3 +42,37 @@ def logout():
     logout_user()
     flash("Successful logout")
     return redirect(url_for("home.index"))
+
+
+@auth_blueprint.route("/signup/")
+def signup():
+    page_title = "Cursus - Sign Up"
+    signup_form = SignupForm()
+    auth_btns = get_auth_navbar_btn()
+    return render_template(
+        "auth/signup.html",
+        page_title=page_title,
+        form=signup_form,
+        auth_btns=auth_btns
+    )
+
+
+@auth_blueprint.route("/process-signup/", methods=["POST"])
+def process_signup():
+    form = SignupForm()
+    if form.validate_on_submit():
+        user = User.query.filter(
+            User.username == form.username.data
+            ).first()
+        if user:
+            flash(f"User with username '{form.username.data}' already exists")
+        if form.password_1.data == form.password_2.data:
+            new_user = User()
+            new_user.register(
+                username=form.username.data,
+                password=form.password_1.data
+                )
+            flash("You've successfully signed up for Cursus!")
+            return redirect(url_for("home.index"))
+    flash("Passwords do not match. Please try again.")
+    return redirect(url_for("auth.signup"))

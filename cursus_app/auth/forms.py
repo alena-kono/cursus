@@ -24,3 +24,25 @@ class LoginForm(FlaskForm):
         default=True,
         render_kw={"class": "btn btn-primary"}
         )
+
+
+class SignupForm(FlaskForm):
+    username = StringField(
+        label="Username",
+        validators=[DataRequired()],
+        render_kw={"class": "form-control", "placeholder": "Username"}
+        )
+    password_1 = PasswordField(
+        label="Password",
+        validators=[DataRequired()],
+        render_kw={"class": "form-control", "placeholder": "Password"}
+        )
+    password_2 = PasswordField(
+        label="Confirm your password",
+        validators=[DataRequired()],
+        render_kw={"class": "form-control", "placeholder": "Password"}
+        )
+    submit = SubmitField(
+        label="Sign Up",
+        render_kw={"class": "btn btn-primary btn-lg mb-4 w-100"}
+        )

@@ -30,3 +30,12 @@ class User(db.Model, UserMixin):
 
     def check_password(self, password: str) -> bool:
         return check_password_hash(self.password, password)
+
+    def register(
+        self, username: str, password: str, role: str = "student"
+            ) -> None:
+        self.username = username
+        self.set_password(password)
+        self.role = role
+        db.session.add(self)
+        db.session.commit()
