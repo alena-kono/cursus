@@ -14,7 +14,7 @@ class Course(db.Model):
         db.Integer, primary_key=True
     )
     title = db.Column(
-        db.String(32), unique=True, index=True, nullable=False
+        db.String(32), index=True, nullable=False
         )
     description = db.Column(
         db.String(), nullable=True
@@ -44,3 +44,15 @@ class Course(db.Model):
 
     def __repr__(self):
         return f"<Course {self.title}>"
+
+
+class Topic(db.Model):
+    id = db.Column(
+        db.Integer, primary_key=True
+        )
+    name = db.Column(
+        db.String(32), unique=True, index=True, nullable=False
+        )
+
+    def __repr__(self):
+        return f"<Topic {self.name}>"
