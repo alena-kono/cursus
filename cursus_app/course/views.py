@@ -52,7 +52,7 @@ def courses_in_topic(topic_name):
 @course_blueprint.route("/<int:course_id>")
 @login_required
 def lessons_in_course(course_id):
-    page_title = "Cursus - lessons"
+    page_title = f"{Course.query.get(course_id).title} - lessons"
     auth_btns = get_auth_navbar_btn()
     lessons_in_course = Lesson.query.join(Course).filter(
         Course.id == Lesson.course
