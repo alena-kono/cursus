@@ -1,3 +1,4 @@
+from datetime import datetime
 from cursus_app.db import db
 
 topics = db.Table(
@@ -17,14 +18,17 @@ class Course(db.Model):
         db.String(32), index=True, nullable=False
         )
     description = db.Column(
-        db.String(), nullable=True
+        db.String(), nullable=False
         )
-    start_date = db.Column(
-        db.Date, nullable=True
+    published_at = db.Column(
+        db.Date, nullable=False, default=datetime.now()
         )
-    end_date = db.Column(
-        db.Date, nullable=True
-        )
+    is_active = db.Column(
+        db.Boolean, nullable=False, default=True
+    )
+    is_published = db.Column(
+        db.Boolean, nullable=False, default=False
+    )
     author = db.Column(
         db.Integer, db.ForeignKey("user.id")
         )
@@ -44,6 +48,21 @@ class Course(db.Model):
 
     def __repr__(self):
         return f"<Course {self.title}>"
+
+    def save(
+            self, title: str, description: str, author: int
+    ) -> None:
+        self.title = title
+        self.description = description
+        self.author = author
+        db.session.add(self)
+        db.session.commit()
+
+    def publish(self):
+        self.is_published = True
+        self.published_at = datetime.now()
+        db.session.add(self)
+        db.session.commit()
 
 
 class Topic(db.Model):
