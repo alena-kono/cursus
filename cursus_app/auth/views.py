@@ -69,7 +69,7 @@ def process_signup():
             return redirect(url_for("auth.signup"))
         if form.password_1.data == form.password_2.data:
             new_user = User()
-            new_user.register(
+            new_user.save(
                 username=form.username.data,
                 password=form.password_1.data
                 )

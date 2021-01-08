@@ -31,7 +31,7 @@ class User(db.Model, UserMixin):
     def check_password(self, password: str) -> bool:
         return check_password_hash(self.password, password)
 
-    def register(
+    def save(
         self, username: str, password: str, role: str = "student"
             ) -> None:
         self.username = username
