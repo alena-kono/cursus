@@ -1,5 +1,7 @@
 from datetime import datetime
+
 from cursus_app.db import db
+from cursus_app.user.models import User
 
 topics = db.Table(
     "topics",
@@ -63,6 +65,9 @@ class Course(db.Model):
         self.published_at = datetime.now()
         db.session.add(self)
         db.session.commit()
+
+    def get_author_username(self):
+        return User.query.get(self.author).username
 
 
 class Topic(db.Model):
