@@ -66,6 +66,7 @@ def process_signup():
             ).first()
         if user:
             flash(f"User with username '{form.username.data}' already exists")
+            return redirect(url_for("auth.signup"))
         if form.password_1.data == form.password_2.data:
             new_user = User()
             new_user.register(
