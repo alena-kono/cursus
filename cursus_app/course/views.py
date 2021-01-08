@@ -12,7 +12,7 @@ course_blueprint = Blueprint("course", __name__, url_prefix="/courses")
 def index():
     page_title = "Cursus - all courses"
     auth_btns = get_auth_navbar_btn()
-    courses = Course.query.all()
+    courses = Course.query.order_by(Course.published_at.desc()).all()
     return render_template(
         "course/courses.html",
         page_title=page_title,
