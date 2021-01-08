@@ -3,7 +3,7 @@
 
 <main class="d-flex align-items-center min-vh-100">
     <div class="container w-50">
-        <h1 class="display-4 text-center">Add new course</h1>
+        <h1 class="display-4 text-center">{{ page_title }}</h1>
         {% with messages = get_flashed_messages() %}
             {% if messages %}
             <div class="alert alert-warning" role="alert">
@@ -13,7 +13,7 @@
             </div>
             {% endif %}
         {% endwith %}
-            <form action="{{ url_for('course.process_add_new_course') }}" method="POST">
+            <form action="{{ url_for('course.process_create') }}" method="POST">
                 {{ form.csrf_token }}
                 {{ form.hidden_tag() }}
                 <div class="form-group">

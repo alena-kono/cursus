@@ -66,23 +66,23 @@ def lessons_in_course(course_id):
     )
 
 
-@course_blueprint.route("/add-new-course")
+@course_blueprint.route("/create")
 @login_required
-def add_new_course():
-    page_title = "Add new course"
+def create():
+    page_title = "Create new course"
     new_course_form = NewCourse()
     auth_btns = get_auth_navbar_btn()
     return render_template(
-        "course/add_new_course.html",
+        "course/create.html",
         page_title=page_title,
         auth_btns=auth_btns,
         form=new_course_form
     )
 
 
-@course_blueprint.route("/process-add-new-course", methods=["POST"])
+@course_blueprint.route("/process-create", methods=["POST"])
 @login_required
-def process_add_new_course():
+def process_create():
     form = NewCourse()
     if form.validate_on_submit():
         new_course = Course()
@@ -91,7 +91,7 @@ def process_add_new_course():
             description=form.description.data,
             author=current_user.id
         )
-        flash("Successfully added new course")
+        flash("New course has been successfully created")
         return redirect(url_for("course.index"))
     flash("Please, fill in the all fields")
-    return redirect(url_for("course.add_new_course"))
+    return redirect(url_for("course.create_course"))
