@@ -91,7 +91,7 @@ def process_create():
             description=form.description.data,
             author=current_user.id
         )
-        flash("New course has been successfully created")
+        flash("New course has been successfully created", "success")
         return redirect(url_for("course.index"))
-    flash("Please, fill in the all fields")
+    flash("Please, fill in the all fields", "warning")
     return redirect(url_for("course.create_course"))

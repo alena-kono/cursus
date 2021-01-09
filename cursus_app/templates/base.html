@@ -12,10 +12,23 @@
 
         <title>{{ page_title }}</title>
     </head>
-    <body>
+    <body style="padding-top: 5%">
         {% include "navbar.html" %}
         <main>
-            {% block content %}{% endblock %}
+            <div class="row justify-content-md-center">
+                <div class="col-sm-4 text-center">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}" role="alert">
+                                <span>{{ message }}</span>
+                            {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                </div>
+            </div>
+        {% block content %}{% endblock %}
         </main>
 
         <!-- Optional JavaScript; choose one of the two! -->

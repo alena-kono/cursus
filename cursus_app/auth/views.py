@@ -31,16 +31,16 @@ def process_login():
             ).first()
         if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember_me.data)
-            flash("Successful login")
+            flash("Successful login", "success")
             return redirect(url_for("home.index"))
-    flash("Incorrect username or password")
+    flash("Incorrect username or password", "warning")
     return redirect(url_for("auth.login"))
 
 
 @auth_blueprint.route("/logout/")
 def logout():
     logout_user()
-    flash("Successful logout")
+    flash("Successful logout", "success")
     return redirect(url_for("home.index"))
 
 
@@ -65,7 +65,10 @@ def process_signup():
             User.username == form.username.data
             ).first()
         if user:
-            flash(f"User with username '{form.username.data}' already exists")
+            flash(
+                f"User with username '{form.username.data}' already exists",
+                "warning"
+                )
             return redirect(url_for("auth.signup"))
         if form.password_1.data == form.password_2.data:
             new_user = User()
@@ -74,8 +77,12 @@ def process_signup():
                 password=form.password_1.data
                 )
             flash(
-                "You've successfully signed up for Cursus!\nPlease log in."
+                "You've successfully signed up for Cursus!\nPlease log in.",
+                "success"
                 )
             return redirect(url_for("auth.login"))
-    flash("Passwords do not match. Please try again.")
+    flash(
+        "Passwords do not match. Please try again.",
+        "warning"
+        )
     return redirect(url_for("auth.signup"))
