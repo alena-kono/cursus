@@ -1,7 +1,13 @@
 from cursus_app.auth.utils import get_auth_navbar_btn
 from flask import Blueprint, render_template
 
+from create_db import setup_demo_db
 home_blueprint = Blueprint("home", __name__)
+
+
+@home_blueprint.before_app_first_request
+def setup_db():
+    setup_demo_db()
 
 
 @home_blueprint.route("/")
