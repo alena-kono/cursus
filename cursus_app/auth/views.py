@@ -1,6 +1,5 @@
 from cursus_app.auth.forms import LoginForm, SignupForm
 from cursus_app.user.models import User
-from cursus_app.auth.utils import get_auth_navbar_btn
 from flask import Blueprint, flash, redirect, render_template, url_for
 from flask_login import current_user, login_user, logout_user
 
@@ -13,12 +12,11 @@ def login():
         return redirect(url_for("home.index"))
     page_title = "Cursus - Login"
     login_form = LoginForm()
-    auth_btns = get_auth_navbar_btn()
     return render_template(
         "auth/login.html",
         page_title=page_title,
         form=login_form,
-        auth_btns=auth_btns
+        current_user=current_user
     )
 
 
@@ -48,12 +46,11 @@ def logout():
 def signup():
     page_title = "Cursus - Sign Up"
     signup_form = SignupForm()
-    auth_btns = get_auth_navbar_btn()
     return render_template(
         "auth/signup.html",
         page_title=page_title,
         form=signup_form,
-        auth_btns=auth_btns
+        current_user=current_user
     )
 
 

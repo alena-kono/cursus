@@ -17,12 +17,22 @@
                 <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
             <ul class="nav navbar-nav ml-auto">
-                <form class="form-inline">
-                    <a class="btn btn-info" href="{{ auth_btns[0].link }}" role="button">{{ auth_btns[0].btn }}</a>
-                </form>
-                <form class="form-inline">
-                    <a class="btn btn-primary" href="{{ auth_btns[1].link }}" role="button">{{ auth_btns[1].btn }}</a>
-                </form>
+                {% if current_user.is_authenticated %}
+                    <form class="form-inline">
+                        <a class="btn btn-info" href="#" role="button">{{ current_user.username }}</a>
+                    </form>
+                    <form class="form-inline">
+                        <a class="btn btn-primary" href="{{ url_for('auth.logout') }}" role="button">Logout</a>
+                    </form>
+                {% else %}
+                    <form class="form-inline">
+                        <a class="btn btn-info" href="{{ url_for('auth.login') }}" role="button">Log In</a>
+                    </form>
+                    <form class="form-inline">
+                        <a class="btn btn-primary" href="{{ url_for('auth.signup') }}" role="button">Sign Up</a>
+                    </form>
+                {% endif %}
+
             </ul>
         </div>
     </div>

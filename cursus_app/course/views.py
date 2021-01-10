@@ -1,4 +1,3 @@
-from cursus_app.auth.utils import get_auth_navbar_btn
 from cursus_app.course.forms import NewCourse
 from cursus_app.course.models import Course, Topic
 from cursus_app.lesson.models import Lesson
@@ -12,12 +11,11 @@ course_blueprint = Blueprint("course", __name__, url_prefix="/courses")
 @course_blueprint.route("/")
 def index():
     page_title = "Courses - Cursus"
-    auth_btns = get_auth_navbar_btn()
     courses = Course.query.order_by(Course.published_at.desc()).all()
     return render_template(
         "course/courses.html",
         page_title=page_title,
-        auth_btns=auth_btns,
+        current_user=current_user,
         courses=courses
     )
 
@@ -25,12 +23,11 @@ def index():
 @course_blueprint.route("/topics/")
 def topics():
     page_title = "Topics - Cursus"
-    auth_btns = get_auth_navbar_btn()
     all_topics = Topic.query.all()
     return render_template(
         "course/topics.html",
         page_title=page_title,
-        auth_btns=auth_btns,
+        current_user=current_user,
         topics=all_topics
     )
 
@@ -38,14 +35,13 @@ def topics():
 @course_blueprint.route("/topics/<topic_name>")
 def courses_in_topic(topic_name):
     page_title = f"{topic_name} - Cursus"
-    auth_btns = get_auth_navbar_btn()
     courses_in_topic = Course.query.filter(
         Course.topics.any(Topic.name == topic_name)
         )
     return render_template(
         "course/courses_in_topic.html",
         page_title=page_title,
-        auth_btns=auth_btns,
+        current_user=current_user,
         courses_in_topic=courses_in_topic,
         topic_name=topic_name
     )
@@ -55,14 +51,13 @@ def courses_in_topic(topic_name):
 @login_required
 def lessons_in_course(course_id):
     page_title = f"{Course.query.get(course_id).title} - lessons - Cursus"
-    auth_btns = get_auth_navbar_btn()
     lessons_in_course = Lesson.query.join(Course).filter(
         Course.id == Lesson.course
         ).filter(Course.id == course_id).all()
     return render_template(
         "course/lessons_in_course.html",
         page_title=page_title,
-        auth_btns=auth_btns,
+        current_user=current_user,
         lessons_in_course=lessons_in_course
     )
 
@@ -72,11 +67,10 @@ def lessons_in_course(course_id):
 def create():
     page_title = "Create a course - Cursus"
     new_course_form = NewCourse()
-    auth_btns = get_auth_navbar_btn()
     return render_template(
         "course/create.html",
         page_title=page_title,
-        auth_btns=auth_btns,
+        current_user=current_user,
         form=new_course_form
     )
 
@@ -107,13 +101,12 @@ def process_create():
 @author_required
 def authorboard(course_id: int):
     page_title = "Authorboard - Cursus"
-    auth_btns = get_auth_navbar_btn()
     lessons_in_course = Lesson.query.join(Course).filter(
         Course.id == Lesson.course
         ).filter(Course.id == course_id).order_by(Lesson.index.asc()).all()
     return render_template(
         "course/authorboard.html",
         page_title=page_title,
-        auth_btns=auth_btns,
+        current_user=current_user,
         lessons_in_course=lessons_in_course
     )
