@@ -11,7 +11,7 @@ course_blueprint = Blueprint("course", __name__, url_prefix="/courses")
 
 @course_blueprint.route("/")
 def index():
-    page_title = "Cursus - all courses"
+    page_title = "Courses - Cursus"
     auth_btns = get_auth_navbar_btn()
     courses = Course.query.order_by(Course.published_at.desc()).all()
     return render_template(
@@ -24,7 +24,7 @@ def index():
 
 @course_blueprint.route("/topics/")
 def topics():
-    page_title = "Cursus - all topics"
+    page_title = "Topics - Cursus"
     auth_btns = get_auth_navbar_btn()
     all_topics = Topic.query.all()
     return render_template(
@@ -37,7 +37,7 @@ def topics():
 
 @course_blueprint.route("/topics/<topic_name>")
 def courses_in_topic(topic_name):
-    page_title = f"Cursus - {topic_name}"
+    page_title = f"{topic_name} - Cursus"
     auth_btns = get_auth_navbar_btn()
     courses_in_topic = Course.query.filter(
         Course.topics.any(Topic.name == topic_name)
@@ -54,7 +54,7 @@ def courses_in_topic(topic_name):
 @course_blueprint.route("/<int:course_id>")
 @login_required
 def lessons_in_course(course_id):
-    page_title = f"{Course.query.get(course_id).title} - lessons"
+    page_title = f"{Course.query.get(course_id).title} - lessons - Cursus"
     auth_btns = get_auth_navbar_btn()
     lessons_in_course = Lesson.query.join(Course).filter(
         Course.id == Lesson.course
@@ -70,7 +70,7 @@ def lessons_in_course(course_id):
 @course_blueprint.route("/create")
 @login_required
 def create():
-    page_title = "Create new course"
+    page_title = "Create a course - Cursus"
     new_course_form = NewCourse()
     auth_btns = get_auth_navbar_btn()
     return render_template(
