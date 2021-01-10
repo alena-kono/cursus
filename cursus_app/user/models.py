@@ -4,7 +4,6 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 
 class User(db.Model, UserMixin):
-    ROLES = ('admin', 'tutor', 'student')
 
     id = db.Column(
         db.Integer, primary_key=True
@@ -14,9 +13,6 @@ class User(db.Model, UserMixin):
         )
     password = db.Column(
         db.String(128), nullable=False
-        )
-    role = db.Column(
-        db.String(32), nullable=False
         )
     userpic_url = db.Column(
         db.String(), nullable=True
