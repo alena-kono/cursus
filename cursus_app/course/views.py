@@ -4,6 +4,7 @@ from cursus_app.course.models import Course, Topic
 from cursus_app.lesson.models import Lesson
 from flask import Blueprint, flash, redirect, render_template, url_for
 from flask_login import current_user, login_required
+from cursus_app.course.decorators import author_required
 
 course_blueprint = Blueprint("course", __name__, url_prefix="/courses")
 
@@ -92,6 +93,27 @@ def process_create():
             author=current_user.id
         )
         flash("New course has been successfully created", "success")
-        return redirect(url_for("course.index"))
+        created_course_id = Course.query.order_by(Course.id.desc()).first().id
+        return redirect(url_for(
+            "course.authorboard",
+            course_id=created_course_id)
+            )
     flash("Please, fill in the all fields", "warning")
     return redirect(url_for("course.create_course"))
+
+
+@course_blueprint.route("/<int:course_id>/authorboard/")
+@login_required
+@author_required
+def authorboard(course_id: int):
+    page_title = "Authorboard - Cursus"
+    auth_btns = get_auth_navbar_btn()
+    lessons_in_course = Lesson.query.join(Course).filter(
+        Course.id == Lesson.course
+        ).filter(Course.id == course_id).order_by(Lesson.index.asc()).all()
+    return render_template(
+        "course/authorboard.html",
+        page_title=page_title,
+        auth_btns=auth_btns,
+        lessons_in_course=lessons_in_course
+    )
