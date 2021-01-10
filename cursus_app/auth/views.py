@@ -1,5 +1,6 @@
 from cursus_app.auth.forms import LoginForm, SignupForm
 from cursus_app.user.models import User
+from cursus_app.utils import get_validation_errors
 from flask import Blueprint, flash, redirect, render_template, url_for
 from flask_login import current_user, login_user, logout_user
 
@@ -58,28 +59,15 @@ def signup():
 def process_signup():
     form = SignupForm()
     if form.validate_on_submit():
-        user = User.query.filter(
-            User.username == form.username.data
-            ).first()
-        if user:
-            flash(
-                f"User with username '{form.username.data}' already exists",
-                "warning"
-                )
-            return redirect(url_for("auth.signup"))
-        if form.password_1.data == form.password_2.data:
-            new_user = User()
-            new_user.save(
-                username=form.username.data,
-                password=form.password_1.data
-                )
-            flash(
-                "You've successfully signed up for Cursus!\nPlease log in.",
-                "success"
-                )
-            return redirect(url_for("auth.login"))
-    flash(
-        "Passwords do not match. Please try again.",
-        "warning"
-        )
+        new_user = User()
+        new_user.save(
+            username=form.username.data,
+            password=form.password_1.data
+            )
+        flash(
+            "You've successfully signed up for Cursus!\nPlease log in.",
+            "success"
+            )
+        return redirect(url_for("auth.login"))
+    get_validation_errors(form=form)
     return redirect(url_for("auth.signup"))
