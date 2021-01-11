@@ -13,6 +13,10 @@ topics = db.Table(
 
 
 class Course(db.Model):
+    """Subclass of :class:`SQLAlchemy.Model`.
+
+    Represents a database table `course`.
+    """
     id = db.Column(
         db.Integer, primary_key=True
     )
@@ -54,23 +58,41 @@ class Course(db.Model):
     def save(
             self, title: str, description: str, author: int
     ) -> None:
+        """Adds data and commits to the database table `course`.
+
+        :param title: :attr: of :class:`Course`
+        representing course title
+        :type title: str
+
+        :param description: :attr: of :class:`Course`
+        representing course description
+        :type description: str
+
+        :param author: :attr: of :class:`Course`
+        representing id of the course author (instance of :class:`User`)
+        :type author: int
+
+        :raises no exceptions:
+
+        :returns: None
+        :rtype: None
+        """
         self.title = title
         self.description = description
         self.author = author
         db.session.add(self)
         db.session.commit()
 
-    def publish(self):
-        self.is_published = True
-        self.published_at = datetime.now()
-        db.session.add(self)
-        db.session.commit()
-
     def get_author_username(self):
+        # remove when moving db queries to separate utils.py file
         return User.query.get(self.author).username
 
 
 class Topic(db.Model):
+    """Subclass of :class:`SQLAlchemy.Model`.
+
+    Represents a database table `topic`.
+    """
     id = db.Column(
         db.Integer, primary_key=True
         )

@@ -5,6 +5,16 @@ from wtforms.validators import DataRequired, EqualTo, ValidationError
 
 
 class LoginForm(FlaskForm):
+    """Subclass of :class: `flask_wtf.Flask-Form`. Represents login form.
+
+    :attr username: StringField
+
+    :attr password: PasswordField
+
+    :attr submit: SubmitField
+
+    :attr remember_me: BooleanField
+    """
     username = StringField(
         label="Username",
         validators=[DataRequired()],
@@ -27,6 +37,17 @@ class LoginForm(FlaskForm):
 
 
 class SignupForm(FlaskForm):
+    """Subclass of :class: `flask_wtf.Flask-Form`. Represents sign up form.
+
+    :attr username: StringField
+
+    :attr password_1: PasswordField
+
+    :attr password_2: PasswordField that validates
+    equality to `password_1` field
+
+    :attr submit: SubmitField
+    """
     username = StringField(
         label="Username",
         validators=[DataRequired()],
@@ -50,7 +71,19 @@ class SignupForm(FlaskForm):
         render_kw={"class": "btn btn-primary btn-lg mb-4 w-100"}
         )
 
-    def validate_username(self, username) -> ValidationError:
+    def validate_username(self, username: str) -> ValidationError:
+        """Validates username by checking whether instance of
+        :class: `User` with `username` is already presented in the database.
+
+        :param username: field of :class:`SignupForm` to be validated
+        :type username: str
+
+        :raises ValidationError: if `username` is presented in the
+        database
+
+        :returns: None
+        :rtype: None
+        """
         user = User.query.filter(
             User.username == username.data
             ).first()

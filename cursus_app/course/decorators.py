@@ -6,8 +6,8 @@ from flask_login import config, current_user
 
 
 def author_required(func):
-    """View decorator that ensures that the current user is
-    the author of the Course with `course_id` before calling the actual view.
+    """View decorator that ensures current user to be the author
+    of the Course with `course_id` before calling the actual view.
     (If they are not, it flashes 'Access denied' warning and redirects
     to 'home.index'page).
     `course_id` parameter should be passed to the actual view,
@@ -24,9 +24,13 @@ def author_required(func):
     To enable this, if the application configuration variable `LOGIN_DISABLED`
     is set to `True`, this decorator will be ignored.
 
-    :param func: The view function to decorate.
+    :param func: the view function to decorate
     :type func: function
-    :exceptions: TypeError
+
+    :raises TypeError: if `course_id` is not passed in view function
+
+    :returns: decorated view function
+    :rtype: function
     """
     @wraps(func)
     def decorated_view(*args, **kwargs):
