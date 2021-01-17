@@ -4,7 +4,7 @@
 <main class="d-flex align-items-center min-vh-100">
     <div class="container w-50">
         <h1 class="display-4 text-center">{{ page_title }}</h1>
-            <form action="{{ url_for('course.process_create') }}" method="POST">
+            <form action="{{ url_for('tutorboard.process_create_course') }}" method="POST">
                 {{ form.csrf_token }}
                 {{ form.hidden_tag() }}
                 <div class="form-group">

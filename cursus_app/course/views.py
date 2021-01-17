@@ -1,9 +1,7 @@
-from cursus_app.course.forms import NewCourse
 from cursus_app.course.models import Course, Topic
 from cursus_app.lesson.models import Lesson
-from flask import Blueprint, flash, redirect, render_template, url_for
+from flask import Blueprint, render_template
 from flask_login import current_user, login_required
-from cursus_app.course.decorators import author_required
 
 course_blueprint = Blueprint("course", __name__, url_prefix="/courses")
 
@@ -56,56 +54,6 @@ def lessons_in_course(course_id):
         ).filter(Course.id == course_id).all()
     return render_template(
         "course/lessons_in_course.html",
-        page_title=page_title,
-        current_user=current_user,
-        lessons_in_course=lessons_in_course
-    )
-
-
-@course_blueprint.route("/create")
-@login_required
-def create():
-    page_title = "Create a course - Cursus"
-    new_course_form = NewCourse()
-    return render_template(
-        "course/create.html",
-        page_title=page_title,
-        current_user=current_user,
-        form=new_course_form
-    )
-
-
-@course_blueprint.route("/process-create", methods=["POST"])
-@login_required
-def process_create():
-    form = NewCourse()
-    if form.validate_on_submit():
-        new_course = Course()
-        new_course.save(
-            title=form.title.data,
-            description=form.description.data,
-            author=current_user.id
-        )
-        flash("New course has been successfully created", "success")
-        created_course_id = Course.query.order_by(Course.id.desc()).first().id
-        return redirect(url_for(
-            "course.authorboard",
-            course_id=created_course_id)
-            )
-    flash("Please, fill in the all fields", "warning")
-    return redirect(url_for("course.create_course"))
-
-
-@course_blueprint.route("/<int:course_id>/authorboard/")
-@login_required
-@author_required
-def authorboard(course_id: int):
-    page_title = "Authorboard - Cursus"
-    lessons_in_course = Lesson.query.join(Course).filter(
-        Course.id == Lesson.course
-        ).filter(Course.id == course_id).order_by(Lesson.index.asc()).all()
-    return render_template(
-        "course/authorboard.html",
         page_title=page_title,
         current_user=current_user,
         lessons_in_course=lessons_in_course
