@@ -1,6 +1,7 @@
 from cursus_app.course.decorators import author_required
-from cursus_app.course.forms import NewCourse
+from cursus_app.course.forms import NewCourseForm
 from cursus_app.course.models import Course
+from cursus_app.lesson.forms import NewLessonForm
 from cursus_app.lesson.models import Lesson
 from flask import Blueprint, flash, redirect, render_template, url_for
 from flask_login import current_user, login_required
@@ -12,23 +13,37 @@ tutorboard_blueprint = Blueprint(
     )
 
 
+@tutorboard_blueprint.route("/")
+@tutorboard_blueprint.route("/courses")
+@login_required
+def index():
+    page_title = "Tutorboard - Cursus"
+    all_courses = Course.query.filter(Course.author == current_user.id).all()
+    return render_template(
+        "tutorboard/index.html",
+        page_title=page_title,
+        current_user=current_user,
+        courses=all_courses
+    )
+
+
 @tutorboard_blueprint.route("/create-course/")
 @login_required
 def create_course():
     page_title = "Create a course - Cursus"
-    new_course_form = NewCourse()
+    form = NewCourseForm()
     return render_template(
         "tutorboard/create_course.html",
         page_title=page_title,
         current_user=current_user,
-        form=new_course_form
+        form=form
     )
 
 
 @tutorboard_blueprint.route("/process-create-course/", methods=["POST"])
 @login_required
 def process_create_course():
-    form = NewCourse()
+    form = NewCourseForm()
     if form.validate_on_submit():
         new_course = Course()
         new_course.save(
@@ -46,17 +61,47 @@ def process_create_course():
     return redirect(url_for("tutorboard.create_course"))
 
 
-@tutorboard_blueprint.route("/")
+@tutorboard_blueprint.route("courses/<int:course_id>/lessons/")
 @login_required
-def index():
-    page_title = "Tutorboard - Cursus"
-    # lessons_in_course = Lesson.query.join(Course).filter(
-    #     Course.id == Lesson.course
-    #     ).filter(Course.id == course_id).order_by(Lesson.index.asc()).all()
-    # return render_template(
-    #     "tutorboard/index.html",
-    #     page_title=page_title,
-    #     current_user=current_user,
-    #     lessons_in_course=lessons_in_course
-    # )
-    return "All tutorboard courses here"
+@author_required
+def lessons(course_id: int):
+    page_title = "Lessons - Cursus"
+    lessons = Lesson.query.join(Course).filter(
+        Course.id == Lesson.course
+        ).filter(Course.id == course_id).all()
+    return render_template(
+        "tutorboard/lessons.html",
+        page_title=page_title,
+        current_user=current_user,
+        lessons=lessons,
+        course_id=course_id
+    )
+
+
+@tutorboard_blueprint.route("courses/<int:course_id>/lessons/create-lesson/")
+@login_required
+@author_required
+def create_lesson(course_id: int):
+    page_title = "Create lesson - Cursus"
+    form = NewLessonForm()
+    return render_template(
+        "tutorboard/create_lesson.html",
+        page_title=page_title,
+        current_user=current_user,
+        form=form,
+        course_id=course_id
+    )
+
+
+@tutorboard_blueprint.route(
+    "courses/<int:course_id>/lessons/process-create-lesson/",
+    methods=["POST"]
+    )
+@login_required
+@author_required
+def process_create_lesson(course_id: int):
+    form = NewLessonForm()
+    if form.validate_on_submit():
+        # save to db
+        return "Success"
+    return "Error"

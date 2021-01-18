@@ -15,14 +15,15 @@
 <div class="container">
 
     <div class="row">
-            {% for course in courses %}
+            {% for lesson in lessons %}
                 <div class="col-md-3">
                     <div class="card md-light mb-3 text-center">
                         <img src="{{ url_for('static', filename='images/course-topics.jpg') }}" class="card-img-fluid" alt="img">
                             <div class="card-img-top">
                                 <div class="card-body">
-                                <h4 class="text">{{ course.title }}</h4>
-                                <a href="/tutorboard/courses/{{ course.id }}/lessons/" class="stretched-link"></a>
+                                <h4 class="text">{{ lesson.title }}</h4>
+                                <a href="#" class="stretched-link"></a>
+                                <p>{{lesson.index}}</p>
                             </div>
                         </div>
                     </div>
@@ -33,8 +34,8 @@
                 <img src="{{ url_for('static', filename='images/tutorboard-plus.jpg') }}" class="card-img-fluid" alt="img">
                     <div class="card-img-top">
                         <div class="card-body">
-                            <h4 class="text">Create new course</h4>
-                            <a href="{{ url_for('tutorboard.create_course') }}" class="stretched-link"></a>
+                            <h4 class="text">Create new lesson</h4>
+                            <a href="{{ url_for('tutorboard.create_lesson', course_id=course_id) }}" class="stretched-link"></a>
                     </div>
                 </div>
             </div>
