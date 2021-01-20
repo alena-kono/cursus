@@ -1,5 +1,7 @@
+from typing import List, Tuple
+
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, TextAreaField
+from wtforms import SelectField, StringField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, Length, ValidationError
 
 
@@ -53,3 +55,21 @@ class NewCourseForm(FlaskForm):
         if not title.isalnum():
             msg = "Title should contain only letters(a-z) and/or digits(0-9)"
             raise ValidationError(msg)
+
+
+class FilterByTutorForm(FlaskForm):
+    filter_by = SelectField(
+        label="Filter by tutor",
+        coerce=int
+        )
+    submit = SubmitField(
+        label="Show",
+        render_kw={"class": "btn btn-primary btn-sm"}
+    )
+
+    @staticmethod
+    def get_all_tutors(courses: list) -> List[Tuple]:
+        choices = [(0, "all")]
+        for course in courses:
+            choices.append((course.author, course.get_author_username()))
+        return choices
