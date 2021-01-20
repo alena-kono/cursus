@@ -2,6 +2,7 @@ from datetime import datetime
 
 from cursus_app.db import db
 from cursus_app.user.models import User
+from cursus_app.lesson.models import Lesson
 
 topics = db.Table(
     "topics",
@@ -101,6 +102,12 @@ class Course(db.Model):
             Course.author == tutor_id).order_by(
                 Course.published_at.desc()).all()
         return courses_by_tutor
+
+    def get_all_lessons(self) -> list:
+        lessons = Lesson.query.join(Course).filter(
+            Course.id == Lesson.course
+            ).filter(Course.id == self.id).all()
+        return lessons
 
 
 class Topic(db.Model):

@@ -86,9 +86,11 @@ def process_create_course():
 @author_required
 def lessons(course_id: int):
     page_title = "Lessons - Cursus"
-    lessons = Lesson.query.join(Course).filter(
-        Course.id == Lesson.course
-        ).filter(Course.id == course_id).all()
+    # lessons = Lesson.query.join(Course).filter(
+    #     Course.id == Lesson.course
+    #     ).filter(Course.id == course_id).all()
+    course = Course.query.get(course_id)
+    lessons = course.get_all_lessons()
     return render_template(
         "tutorboard/lessons.html",
         page_title=page_title,
