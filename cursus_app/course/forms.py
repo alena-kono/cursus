@@ -68,8 +68,11 @@ class FilterByTutorForm(FlaskForm):
     )
 
     @staticmethod
-    def get_all_tutors(courses: list) -> List[Tuple]:
+    def _get_all_tutor_choices(courses: list) -> List[Tuple]:
         choices = [(0, "all")]
         for course in courses:
             choices.append((course.author, course.get_author_username()))
         return choices
+
+    def load_tutor_choices(self, courses: list) -> None:
+        self.filter_by.choices = self._get_all_tutor_choices(courses)

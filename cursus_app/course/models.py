@@ -87,6 +87,13 @@ class Course(db.Model):
         # remove when moving db queries to separate utils.py file
         return User.query.get(self.author).username
 
+    @staticmethod
+    def get_courses_by_tutor(tutor_id: int):
+        courses_by_tutor = Course.query.filter(
+            Course.author == tutor_id).order_by(
+                Course.published_at.desc()).all()
+        return courses_by_tutor
+
 
 class Topic(db.Model):
     """Subclass of :class:`SQLAlchemy.Model`.

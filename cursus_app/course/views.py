@@ -14,7 +14,7 @@ def index():
     courses = Course.query.order_by(Course.published_at.desc()).all()
     grouped_by_tutor = Course.query.group_by(Course.author)
     form = FilterByTutorForm()
-    form.filter_by.choices = form.get_all_tutors(grouped_by_tutor)
+    form.load_tutor_choices(grouped_by_tutor)
     return render_template(
         "course/courses.html",
         page_title=page_title,
@@ -28,16 +28,14 @@ def index():
 def process_filter():
     page_title = "Courses - Cursus"
     form = FilterByTutorForm()
-    filter_by = form.filter_by.data
-    if filter_by:
-        courses = Course.query.filter(
-            Course.author == filter_by).order_by(
-                Course.published_at.desc()).all()
-        tutor = User.query.get(filter_by).username
+    selected_tutor_id = form.filter_by.data
+    if selected_tutor_id:
+        courses = Course.get_courses_by_tutor(tutor_id=selected_tutor_id)
+        tutor = User.query.get(selected_tutor_id).username
         page_title = f"Courses by {tutor} - Cursus"
-        form = FilterByTutorForm()
         grouped_by_tutor = Course.query.group_by(Course.author)
-        form.filter_by.choices = form.get_all_tutors(grouped_by_tutor)
+        form = FilterByTutorForm()
+        form.load_tutor_choices(grouped_by_tutor)
         return render_template(
             "course/courses.html",
             page_title=page_title,
