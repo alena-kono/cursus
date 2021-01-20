@@ -95,17 +95,6 @@ def lessons(course_id: int):
         course_id=course_id
     )
 
-# @tutorboard_blueprint.route(
-#     "courses/<int:course_id>/lessons/process-publish",
-#     methods=["POST"]
-#     )
-# @login_required
-# @author_required
-# def process_publish(course_id: int):
-
-
-
-
 
 @tutorboard_blueprint.route("courses/<int:course_id>/lessons/create-lesson/")
 @login_required
