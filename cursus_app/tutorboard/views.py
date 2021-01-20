@@ -3,7 +3,7 @@ from cursus_app.course.forms import NewCourseForm
 from cursus_app.course.models import Course
 from cursus_app.lesson.forms import NewLessonForm
 from cursus_app.lesson.models import Lesson
-from flask import Blueprint, flash, redirect, render_template, url_for
+from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 
 tutorboard_blueprint = Blueprint(
@@ -25,6 +25,24 @@ def index():
         current_user=current_user,
         courses=all_courses
     )
+
+
+@tutorboard_blueprint.route("/publish-course", methods=["POST"])
+@login_required
+def publish_course():
+    course_id = request.form.get("course_id")
+    if course_id:
+        course = Course.query.get(course_id)
+        course.publish()
+        flash(
+            message=f"Course {course.title} is successfully published",
+            category="success")
+    else:
+        flash(
+            message=f"Course {course.title} is not published",
+            category="warning"
+        )
+    return redirect(url_for("tutorboard.index"))
 
 
 @tutorboard_blueprint.route("/create-course/")
@@ -77,6 +95,17 @@ def lessons(course_id: int):
         course_id=course_id
     )
 
+# @tutorboard_blueprint.route(
+#     "courses/<int:course_id>/lessons/process-publish",
+#     methods=["POST"]
+#     )
+# @login_required
+# @author_required
+# def process_publish(course_id: int):
+
+
+
+
 
 @tutorboard_blueprint.route("courses/<int:course_id>/lessons/create-lesson/")
 @login_required
@@ -102,6 +131,11 @@ def create_lesson(course_id: int):
 def process_create_lesson(course_id: int):
     form = NewLessonForm()
     if form.validate_on_submit():
-        # save to db
-        return "Success"
+        new_lesson = Lesson()
+        new_lesson.save(
+            title=form.title.data,
+            content=form.content.data,
+            course=course_id,
+        )
+        return redirect(url_for("tutorboard.lessons", course_id=course_id))
     return "Error"

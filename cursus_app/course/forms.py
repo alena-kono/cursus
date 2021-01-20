@@ -34,7 +34,7 @@ class NewCourseForm(FlaskForm):
             "placeholder": "Description", "rows": 5}
         )
     submit = SubmitField(
-        label="Create",
+        label="Create course and save it to a draft",
         render_kw={"class": "btn btn-primary btn-lg mb-4 w-100"}
         )
 

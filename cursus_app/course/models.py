@@ -26,8 +26,11 @@ class Course(db.Model):
     description = db.Column(
         db.String(), nullable=False
         )
+    created_at = db.Column(
+        db.DateTime, nullable=False, default=datetime.now()
+        )
     published_at = db.Column(
-        db.Date, nullable=False, default=datetime.now()
+        db.DateTime, nullable=True
         )
     is_active = db.Column(
         db.Boolean, nullable=False, default=True
@@ -81,6 +84,11 @@ class Course(db.Model):
         self.description = description
         self.author = author
         db.session.add(self)
+        db.session.commit()
+
+    def publish(self):
+        self.is_published = True
+        self.published_at = datetime.now()
         db.session.commit()
 
     def get_author_username(self):

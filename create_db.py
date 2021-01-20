@@ -31,9 +31,10 @@ def create_courses(authors_number: int = 3) -> list:
         new_course = Course(
             title=title,
             description=DEFAULT_DESC,
-            published_at=date,
             author=randint(1, authors_number)
         )
+        new_course.is_published = True
+        new_course.published_at = datetime.now()
         created.append(new_course)
     return created
 
@@ -45,13 +46,15 @@ def create_lessons(courses_number: int = 5) -> list:
         aliqua.Ut enim ad minim veniam, quis nostrud exercitation\
         ullamco laboris nisi ut aliquip ex ea commodo consequat."
     created = []
+    ind = 0
     for lesson in LESSONS:
         new_lesson = Lesson(
             title=lesson,
             content=DEFAULT_CONTENT,
-            index=randint(1, 10),
             course=randint(1, courses_number)
             )
+        new_lesson.index = ind
+        ind += 1
         created.append(new_lesson)
     return created
 
