@@ -3,6 +3,7 @@ from cursus_app.course.forms import NewCourseForm
 from cursus_app.course.models import Course
 from cursus_app.lesson.forms import NewLessonForm
 from cursus_app.lesson.models import Lesson
+from cursus_app.utils import get_validation_errors
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 
@@ -35,11 +36,11 @@ def publish_course():
         course = Course.query.get(course_id)
         course.publish()
         flash(
-            message=f"Course {course.title} is successfully published",
+            message=f"Course {course.title} has been successfully published",
             category="success")
     else:
         flash(
-            message=f"Course {course.title} is not published",
+            message=f"Course {course.title} has not been published",
             category="warning"
         )
     return redirect(url_for("tutorboard.index"))
@@ -75,6 +76,7 @@ def process_create_course():
             "tutorboard.index",
             course_id=created_course_id)
             )
+    get_validation_errors(form=form)
     flash("Please, fill in the all fields", "warning")
     return redirect(url_for("tutorboard.create_course"))
 
@@ -126,5 +128,10 @@ def process_create_lesson(course_id: int):
             content=form.content.data,
             course=course_id,
         )
+        flash(
+            message="Lesson has been successfully added",
+            category="success"
+        )
         return redirect(url_for("tutorboard.lessons", course_id=course_id))
-    return "Error"
+    get_validation_errors(form=form)
+    return redirect(url_for("tutorboard.create_lesson"))
