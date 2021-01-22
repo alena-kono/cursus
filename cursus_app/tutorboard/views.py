@@ -85,8 +85,8 @@ def process_create_course():
 @login_required
 @author_required
 def lessons(course_id: int):
-    page_title = "Lessons - Cursus"
     course = Course.query.get(course_id)
+    page_title = f"Tutorboard - Lessons - {course.title}"
     lessons = course.get_all_lessons()
     return render_template(
         "tutorboard/lessons.html",
