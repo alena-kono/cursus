@@ -1,6 +1,5 @@
 from cursus_app.course.forms import FilterByTutorForm
 from cursus_app.course.models import Course, Topic
-from cursus_app.lesson.models import Lesson
 from cursus_app.user.models import User
 from flask import Blueprint, render_template, redirect, url_for
 from flask_login import current_user, login_required
@@ -76,10 +75,9 @@ def courses_in_topic(topic_name):
 @course_blueprint.route("/<int:course_id>")
 @login_required
 def lessons_in_course(course_id):
-    page_title = f"{Course.query.get(course_id).title} - lessons - Cursus"
-    lessons_in_course = Lesson.query.join(Course).filter(
-        Course.id == Lesson.course
-        ).filter(Course.id == course_id).all()
+    course = Course.query.get(course_id)
+    page_title = f"{course.title} - lessons - Cursus"
+    lessons_in_course = course.get_all_lessons()
     return render_template(
         "course/lessons_in_course.html",
         page_title=page_title,

@@ -1,8 +1,8 @@
 from datetime import datetime
 
 from cursus_app.db import db
-from cursus_app.user.models import User
 from cursus_app.lesson.models import Lesson
+from cursus_app.user.models import User
 
 topics = db.Table(
     "topics",
@@ -93,7 +93,6 @@ class Course(db.Model):
         db.session.commit()
 
     def get_author_username(self):
-        # remove when moving db queries to separate utils.py file
         return User.query.get(self.author).username
 
     @staticmethod
@@ -104,9 +103,11 @@ class Course(db.Model):
         return courses_by_tutor
 
     def get_all_lessons(self) -> list:
-        lessons = Lesson.query.join(Course).filter(
+        lessons = db.session.query(Lesson).filter(
             Course.id == Lesson.course
-            ).filter(Course.id == self.id).all()
+        ).filter(
+            Course.id == self.id
+        ).all()
         return lessons
 
 
