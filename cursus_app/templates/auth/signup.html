@@ -5,15 +5,6 @@
     <div class="container w-25">
         <h1 class="display-1 text-center">Cursus</h1>
         <h5 class="text-center">Sign Up - Create your account</h5>
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-            <div class="alert alert-warning" role="alert">
-                {% for message in messages %}
-                  {{ message }}<br>
-                {% endfor %}
-            </div>
-            {% endif %}
-        {% endwith %}
             <form action="{{ url_for('auth.process_signup') }}" method="POST">
                 {{ form.csrf_token }}
                 {{ form.hidden_tag() }}
