@@ -53,16 +53,19 @@ class SignupForm(FlaskForm):
         validators=[DataRequired()],
         render_kw={"class": "form-control", "placeholder": "Username"}
         )
-    password_1 = PasswordField(
+    password_first = PasswordField(
         label="Password",
         validators=[DataRequired()],
         render_kw={"class": "form-control", "placeholder": "Password"}
         )
-    password_2 = PasswordField(
+    password_second = PasswordField(
         label="Confirm your password",
         validators=[
             DataRequired(),
-            EqualTo("password_1", "Passwords do not match. Please try again.")
+            EqualTo(
+                "password_first",
+                "Passwords do not match. Please try again."
+                )
             ],
         render_kw={"class": "form-control", "placeholder": "Password"}
         )
