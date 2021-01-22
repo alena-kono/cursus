@@ -1,92 +1,40 @@
-from datetime import datetime
-from random import choice, randint
+from factory import fuzzy, random
 
-from cursus_app import db
-from cursus_app.course.models import Course, Topic
-from cursus_app.lesson.models import Lesson
-from cursus_app.user.models import User
+from cursus_app import create_app, db
+from factories.models import (RandomCourseFactory, RandomLessonFactory,
+                              RandomTopicFactory, RandomUserFactory)
 
 
-def create_users() -> list:
-    USERS = ["creator", "musician", "artist"]
-    created = []
-    for user in USERS:
-        new_user = User(username=user)
-        new_user.set_password(password="pass")
-        created.append(new_user)
-    return created
+def create_db_tables():
+    db.drop_all()
+    db.create_all()
 
 
-def create_courses(authors_number: int = 3) -> list:
-    COURSES_PUBLISHED_AT = {
-        "Maths": datetime(2015, 4, 28),
-        "Advanced Guitar": datetime(2018, 7, 11),
-        "English": datetime.now(),
-        "Chemistry": datetime.now(),
-        "Ukulele Basics": datetime.now(),
-        }
-    DEFAULT_DESC = "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
-    created = []
-    for title, date in COURSES_PUBLISHED_AT.items():
-        new_course = Course(
-            title=title,
-            description=DEFAULT_DESC,
-            author=randint(1, authors_number)
+def populate_db_with_demo_data(
+    users_num: int = 10,
+    courses_num: int = 10,
+    lessons_per_course_num: int = 5
+        ) -> None:
+    random.reseed_random("cursus_app")
+    random.get_random_state()
+
+    RandomUserFactory.create(username="creator")
+    RandomUserFactory.create_batch(size=users_num)
+    topic = RandomTopicFactory.create_batch(size=2)
+    topics = RandomTopicFactory.create_batch(size=2)
+    RandomCourseFactory.create_batch(
+        size=courses_num,
+        author=fuzzy.FuzzyChoice(range(1, users_num + 1)),
+        topics=fuzzy.FuzzyChoice([topic, topics])
         )
-        new_course.is_published = True
-        new_course.published_at = datetime.now()
-        created.append(new_course)
-    return created
-
-
-def create_lessons(courses_number: int = 5) -> list:
-    LESSONS = ["Basics", "Basics II", "Intermediate", "Advanced"]
-    DEFAULT_CONTENT = "Lorem ipsum dolor sit amet, consectetur adipiscing\
-        elit, sed do eiusmod tempor incididunt ut labore et dolore magna\
-        aliqua.Ut enim ad minim veniam, quis nostrud exercitation\
-        ullamco laboris nisi ut aliquip ex ea commodo consequat."
-    created = []
-    ind = 0
-    for lesson in LESSONS:
-        new_lesson = Lesson(
-            title=lesson,
-            content=DEFAULT_CONTENT,
-            course=randint(1, courses_number)
-            )
-        new_lesson.index = ind
-        ind += 1
-        created.append(new_lesson)
-    return created
-
-
-def create_topics(courses: list) -> list:
-    TOPICS = ["music", "science", "random"]
-    created = []
-    for topic in TOPICS:
-        new_topic = Topic(name=topic)
-        new_topic.courses.append(choice(courses))
-        created.append(new_topic)
-    return created
-
-
-def populate_db_with_test_data():
-    """Populate database tables with test data"""
-    users = create_users()
-    courses = create_courses(authors_number=len(users))
-    lessons = create_lessons(courses_number=len(courses))
-    topics = create_topics(courses=courses)
-    records = [users, courses, lessons, topics]
-    for record in records:
-        for obj in record:
-            db.session.add(obj)
+    RandomLessonFactory.create_for_each_course(
+        courses_num=courses_num,
+        lessons_per_course_num=lessons_per_course_num)
     db.session.commit()
 
 
-def setup_demo_db():
-    """Create db tables and populate them with test data for demo.
-    Run once before the first request to this instance
-    of the application.
-    """
-    db.drop_all()
-    db.create_all()
-    populate_db_with_test_data()
+if __name__ == "__main__":
+    app = create_app()
+    with app.app_context():
+        create_db_tables()
+        populate_db_with_demo_data()

@@ -19,6 +19,12 @@ SQLALCHEMY_DATABASE_URI = "LINK TO YOUR SQLITE3 DATABASE"
 ```
 If ```SQLALCHEMY_DATABASE_URI``` is not setup up as environment variable, then sqlite3 database will be created at the top level directory of the project.
 
+## Demo database
+To populate database with demo data:
+```
+python3 create_db.py
+```
+
 ## Run
 To run development Flask server:
 ```
