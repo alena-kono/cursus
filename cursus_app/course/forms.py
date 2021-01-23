@@ -58,8 +58,12 @@ class NewCourseForm(FlaskForm):
 
 
 class FilterByTutorForm(FlaskForm):
-    filter_by = SelectField(
+    filter_by_tutor = SelectField(
         label="Filter by tutor",
+        coerce=int
+        )
+    filter_by_topic = SelectField(
+        label="Filter by topic",
         coerce=int
         )
     submit = SubmitField(
@@ -74,5 +78,13 @@ class FilterByTutorForm(FlaskForm):
             choices.append((course.author, course.get_author_username()))
         return choices
 
-    def load_tutor_choices(self, courses: list) -> None:
-        self.filter_by.choices = self._get_all_tutor_choices(courses)
+    @staticmethod
+    def _get_all_topic_choices(topics: list) -> List[Tuple]:
+        choices = [(0, "all")]
+        for topic in topics:
+            choices.append((topic.id, topic.name))
+        return choices
+
+    def load_choices(self, courses: list, topics: list) -> None:
+        self.filter_by_tutor.choices = self._get_all_tutor_choices(courses)
+        self.filter_by_topic.choices = self._get_all_topic_choices(topics)

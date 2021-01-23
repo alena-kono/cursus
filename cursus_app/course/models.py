@@ -96,11 +96,18 @@ class Course(db.Model):
         return User.query.get(self.author).username
 
     @staticmethod
-    def get_courses_by_tutor(tutor_id: int):
+    def get_courses_by_tutor(tutor_id: int) -> list:
         courses_by_tutor = Course.query.filter(
             Course.author == tutor_id).order_by(
                 Course.published_at.desc()).all()
         return courses_by_tutor
+
+    @staticmethod
+    def get_courses_by_topic(topic_id: int) -> list:
+        courses_by_topic = Course.query.filter(
+            Course.topics.any(Topic.id == topic_id)
+            )
+        return courses_by_topic
 
     def get_all_lessons(self) -> list:
         lessons = db.session.query(Lesson).filter(

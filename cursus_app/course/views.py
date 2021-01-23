@@ -1,7 +1,6 @@
 from cursus_app.course.forms import FilterByTutorForm
 from cursus_app.course.models import Course, Topic
-from cursus_app.user.models import User
-from flask import Blueprint, render_template, redirect, url_for
+from flask import Blueprint, flash, redirect, render_template, url_for
 from flask_login import current_user, login_required
 
 course_blueprint = Blueprint("course", __name__, url_prefix="/courses")
@@ -12,8 +11,9 @@ def index():
     page_title = "Courses - Cursus"
     courses = Course.query.order_by(Course.published_at.desc()).all()
     grouped_by_tutor = Course.query.group_by(Course.author)
+    all_topics = Topic.query.all()
     form = FilterByTutorForm()
-    form.load_tutor_choices(grouped_by_tutor)
+    form.load_choices(courses=grouped_by_tutor, topics=all_topics)
     return render_template(
         "course/courses.html",
         page_title=page_title,
@@ -27,14 +27,28 @@ def index():
 def process_filter():
     page_title = "Courses - Cursus"
     form = FilterByTutorForm()
-    selected_tutor_id = form.filter_by.data
-    if selected_tutor_id:
+    selected_tutor_id = form.filter_by_tutor.data
+    selected_topic_id = form.filter_by_topic.data
+    courses = None
+
+    if all((selected_tutor_id, selected_topic_id)):
+        courses = Course.query.filter(
+            Course.id == selected_tutor_id,
+            Topic.id == selected_topic_id,
+            ).order_by(Course.published_at.desc()).all()
+        if not courses:
+            flash("Too many filters", "warning")
+            return redirect(url_for("course.index"))
+    if selected_tutor_id and not courses:
         courses = Course.get_courses_by_tutor(tutor_id=selected_tutor_id)
-        tutor = User.query.get(selected_tutor_id).username
-        page_title = f"Courses by {tutor} - Cursus"
+    if selected_topic_id and not courses:
+        courses = Course.get_courses_by_topic(selected_topic_id)
+
+    if courses:
         grouped_by_tutor = Course.query.group_by(Course.author)
+        all_topics = Topic.query.all()
         form = FilterByTutorForm()
-        form.load_tutor_choices(grouped_by_tutor)
+        form.load_choices(courses=grouped_by_tutor, topics=all_topics)
         return render_template(
             "course/courses.html",
             page_title=page_title,
