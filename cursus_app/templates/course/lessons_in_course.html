@@ -22,8 +22,8 @@
         <div class="card-img-top">
             <div class="card-body">
                 <h4 class="text">{{ lesson.title }}</h4>
-                <p>{{ lesson.index }}</h4>
-                <a href="/#" class="stretched-link"></a>
+                <p>{{ lesson.index }}<p>
+                <a href="{{ url_for('course.lesson', course_id=course_id, lesson_id=lesson.id) }}" class="stretched-link"></a>
             </div>
         </div>
         </div>

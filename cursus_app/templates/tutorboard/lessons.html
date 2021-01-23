@@ -22,7 +22,7 @@
                             <div class="card-img-top">
                                 <div class="card-body">
                                 <h4 class="text">{{ lesson.title }}</h4>
-                                <a href="#" class="stretched-link"></a>
+                                <a href="{{ url_for('tutorboard.lesson', course_id=course_id, lesson_id=lesson.id) }}" class="stretched-link"></a>
                                 <p>{{lesson.index}}</p>
                             </div>
                         </div>

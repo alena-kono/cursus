@@ -4,7 +4,8 @@ from cursus_app.course.models import Course
 from cursus_app.lesson.forms import NewLessonForm
 from cursus_app.lesson.models import Lesson
 from cursus_app.utils import get_validation_errors
-from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask import (Blueprint, abort, flash, redirect, render_template, request,
+                   url_for)
 from flask_login import current_user, login_required
 
 tutorboard_blueprint = Blueprint(
@@ -134,3 +135,23 @@ def process_create_lesson(course_id: int):
         return redirect(url_for("tutorboard.lessons", course_id=course_id))
     get_validation_errors(form=form)
     return redirect(url_for("tutorboard.create_lesson"))
+
+
+@tutorboard_blueprint.route(
+    "courses/<int:course_id>/lessons/<int:lesson_id>/"
+    )
+@login_required
+@author_required
+def lesson(course_id: int, lesson_id: int):
+    page_title = "Tutorboard - Lesson"
+    lesson = Lesson.query.get(lesson_id)
+    if lesson:
+        page_title = f"Lesson {lesson.index} - {lesson.title} - Cursus"
+        return render_template(
+            "tutorboard/lesson.html",
+            page_title=page_title,
+            lesson=lesson,
+            course_id=course_id,
+            lesson_id=lesson_id,
+        )
+    return abort(404)

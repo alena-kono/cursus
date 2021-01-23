@@ -1,6 +1,7 @@
 from cursus_app.course.forms import FilterByTutorForm
 from cursus_app.course.models import Course, Topic
-from flask import Blueprint, flash, redirect, render_template, url_for, abort
+from cursus_app.lesson.models import Lesson
+from flask import Blueprint, abort, flash, redirect, render_template, url_for
 from flask_login import current_user, login_required
 
 course_blueprint = Blueprint("course", __name__, url_prefix="/courses")
@@ -88,6 +89,7 @@ def courses_in_topic(topic_id):
 
 
 @course_blueprint.route("/<int:course_id>")
+@course_blueprint.route("/<int:course_id>/lessons/")
 @login_required
 def lessons_in_course(course_id):
     course = Course.query.get(course_id)
@@ -97,5 +99,25 @@ def lessons_in_course(course_id):
         "course/lessons_in_course.html",
         page_title=page_title,
         current_user=current_user,
-        lessons_in_course=lessons_in_course
+        lessons_in_course=lessons_in_course,
+        course_id=course_id
     )
+
+
+@course_blueprint.route(
+    "/<int:course_id>/lessons/<int:lesson_id>/"
+    )
+@login_required
+def lesson(course_id: int, lesson_id: int):
+    page_title = "Lesson - Cursus"
+    lesson = Lesson.query.get(lesson_id)
+    if lesson:
+        page_title = f"Lesson {lesson.index} - {lesson.title} - Cursus"
+        return render_template(
+            "course/lesson.html",
+            page_title=page_title,
+            lesson=lesson,
+            course_id=course_id,
+            lesson_id=lesson_id,
+        )
+    return abort(404)
