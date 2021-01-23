@@ -1,6 +1,6 @@
 from cursus_app.course.forms import FilterByTutorForm
 from cursus_app.course.models import Course, Topic
-from flask import Blueprint, flash, redirect, render_template, url_for
+from flask import Blueprint, flash, redirect, render_template, url_for, abort
 from flask_login import current_user, login_required
 
 course_blueprint = Blueprint("course", __name__, url_prefix="/courses")
@@ -42,7 +42,7 @@ def process_filter():
     if selected_tutor_id and not courses:
         courses = Course.get_courses_by_tutor(tutor_id=selected_tutor_id)
     if selected_topic_id and not courses:
-        courses = Course.get_courses_by_topic(selected_topic_id)
+        courses = Topic.query.get(selected_topic_id).get_all_courses()
 
     if courses:
         grouped_by_tutor = Course.query.group_by(Course.author)
@@ -71,19 +71,20 @@ def topics():
     )
 
 
-@course_blueprint.route("/topics/<topic_name>")
-def courses_in_topic(topic_name):
-    page_title = f"{topic_name} - Cursus"
-    courses_in_topic = Course.query.filter(
-        Course.topics.any(Topic.name == topic_name)
+@course_blueprint.route("/topics/<topic_id>")
+def courses_in_topic(topic_id):
+    topic = Topic.query.get(topic_id)
+    if topic:
+        page_title = f"{topic.name} - Cursus"
+        courses_in_topic = topic.get_all_courses()
+        return render_template(
+            "course/courses_in_topic.html",
+            page_title=page_title,
+            current_user=current_user,
+            courses_in_topic=courses_in_topic,
+            topic=topic
         )
-    return render_template(
-        "course/courses_in_topic.html",
-        page_title=page_title,
-        current_user=current_user,
-        courses_in_topic=courses_in_topic,
-        topic_name=topic_name
-    )
+    return abort(404)
 
 
 @course_blueprint.route("/<int:course_id>")

@@ -102,13 +102,6 @@ class Course(db.Model):
                 Course.published_at.desc()).all()
         return courses_by_tutor
 
-    @staticmethod
-    def get_courses_by_topic(topic_id: int) -> list:
-        courses_by_topic = Course.query.filter(
-            Course.topics.any(Topic.id == topic_id)
-            )
-        return courses_by_topic
-
     def get_all_lessons(self) -> list:
         lessons = db.session.query(Lesson).filter(
             Course.id == Lesson.course
@@ -132,3 +125,9 @@ class Topic(db.Model):
 
     def __repr__(self):
         return f"<Topic {self.name}>"
+
+    def get_all_courses(self) -> list:
+        courses_by_topic = Course.query.filter(
+            Course.topics.any(Topic.id == self.id)
+            ).all()
+        return courses_by_topic
