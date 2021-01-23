@@ -6,6 +6,10 @@
         <div class="row mt-lg-5">
             <div class="col">
                 <h1 class="display-4">{{page_title}}</h1>
+                <span>Marked topics</span>
+                {% for topic in topics %}
+                <span class="badge badge-pill badge-secondary">{{ topic.name }}</span>
+                {% endfor %}
             </div>
         </div>
     </div>
