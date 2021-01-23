@@ -107,7 +107,7 @@ class Course(db.Model):
             Course.id == Lesson.course
         ).filter(
             Course.id == self.id
-        ).all()
+        ).order_by(Lesson.index.asc()).all()
         return lessons
 
 
