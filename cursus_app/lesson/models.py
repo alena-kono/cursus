@@ -59,8 +59,7 @@ class Lesson(db.Model):
 
         db.session.add(self)
         db.session.commit()
-        if not index:
-            self.set_index(index)
+        self.set_index(index)
 
     def get_all_lessons(self) -> list:
         """Gets list of lessons from db sorted by
@@ -103,13 +102,14 @@ class Lesson(db.Model):
         """Sets new `index` value to `self.index` and commits
         changes to database table `lesson`. Rewrites
         other `lessons` indexes accordingly.
+        If one of the cases below has been occurred
+            `index == 0` or `index > number of existing lessons`
+            or `self.index is None`
+        then the last index value to be assigned to `self.index`
 
         :param index:
         representing new `index` value to be set as `self.index`
-        and saved to db. In case if `index` == 0 or `index` is
-        bigger number than number of existing lessons within
-        one `Lesson.course`, last index value to be assigned as
-        `self.index`
+        and saved to db.
         :type index: int
 
         :raises ValueError: if `index` < 0
@@ -124,6 +124,8 @@ class Lesson(db.Model):
         existing_lessons = self.get_all_lessons()
         if index > len(existing_lessons) or index == 0:
             index = len(existing_lessons)
+        if not self.index:
+            self.index = len(existing_lessons)
         if existing_lessons:
             self._reindex_lessons(existing_lessons, index)
             db.session.commit()
