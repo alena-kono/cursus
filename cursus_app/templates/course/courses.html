@@ -53,7 +53,10 @@
                 <h4 class="text">{{ course.title }}</h4>
                 <p>{{ course.description[:60] }}...</p>
                 <p>Author: {{ course.get_author_username() }}</p>
-                <p class="font-italic">Published: {{ course.published_at }}</p>
+                <p class="font-italic">Published at {{ course.published_at.strftime('%d %b %Y') }}</p>
+                {% for topic in course.get_all_topics() %}
+                <span class="badge badge-pill badge-info">{{ topic.name }}</span>
+                {% endfor %}
                 <a href="/courses/{{ course.id }}" class="stretched-link"></a>
             </div>
         </div>

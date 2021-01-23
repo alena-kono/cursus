@@ -110,6 +110,10 @@ class Course(db.Model):
         ).order_by(Lesson.index.asc()).all()
         return lessons
 
+    def get_all_topics(self) -> list:
+        all_topics = self.topics
+        return all_topics
+
 
 class Topic(db.Model):
     """Subclass of :class:`SQLAlchemy.Model`.
