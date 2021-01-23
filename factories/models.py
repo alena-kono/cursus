@@ -57,11 +57,13 @@ class RandomLessonFactory(alchemy.SQLAlchemyModelFactory):
     title = Faker("word")
     content = Faker("paragraph", locale="en_US")
     course = 1
+    index = 1
 
     @staticmethod
     def create_for_each_course(courses_num: int, lessons_per_course_num: int):
         for course in range(1, courses_num + 1):
-            RandomLessonFactory.create_batch(
-                size=lessons_per_course_num,
-                course=course
-                )
+            for lesson in range(1, lessons_per_course_num + 1):
+                RandomLessonFactory.create(
+                    course=course,
+                    index=lesson
+                    )
