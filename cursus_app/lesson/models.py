@@ -126,6 +126,8 @@ class Lesson(db.Model):
             index = len(existing_lessons)
         if not self.index:
             self.index = len(existing_lessons)
+            db.session.commit()
+            return None
         if existing_lessons:
             self._reindex_lessons(existing_lessons, index)
             db.session.commit()
