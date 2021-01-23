@@ -20,8 +20,16 @@
                     {{ form.csrf_token }}
                     {{ form.hidden_tag() }}
                     <div class="form-group">
-                        {{ form.filter_by.label }}
-                        {{ form.filter_by() }}
+                        {{ form.filter_by_tutor.label }}
+                        {{ form.filter_by_tutor() }}
+                    </div>
+                </div>
+                <div class="col-auto">
+                    {{ form.csrf_token }}
+                    {{ form.hidden_tag() }}
+                    <div class="form-group">
+                        {{ form.filter_by_topic.label }}
+                        {{ form.filter_by_topic() }}
                     </div>
                 </div>
                 <div class="col-auto">
