@@ -15,6 +15,15 @@ tutorboard_blueprint = Blueprint(
     )
 
 
+@tutorboard_blueprint.errorhandler(404)
+def page_not_found(error):
+    page_title = "Page not found"
+    return render_template(
+        "404.html",
+        page_title=page_title
+        )
+
+
 @tutorboard_blueprint.route("/")
 @tutorboard_blueprint.route("/courses")
 @login_required
@@ -180,7 +189,7 @@ def update_lesson(course_id: int, lesson_id: int):
             lesson_id=lesson_id,
             form=form
         )
-    return "Error"
+    return abort(404)
 
 
 @tutorboard_blueprint.route(

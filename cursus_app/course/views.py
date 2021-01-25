@@ -7,10 +7,19 @@ from flask_login import current_user, login_required
 course_blueprint = Blueprint("course", __name__, url_prefix="/courses")
 
 
+@course_blueprint.errorhandler(404)
+def page_not_found(error):
+    page_title = "Page not found"
+    return render_template(
+        "404.html",
+        page_title=page_title
+        )
+
+
 @course_blueprint.route("/")
 def index():
     page_title = "Courses - Cursus"
-    courses = Course.query.order_by(Course.published_at.desc()).all()
+    courses = Course.get_all_published_courses()
     grouped_by_tutor = Course.query.group_by(Course.author)
     all_topics = Topic.query.all()
     form = FilterByTutorForm()
@@ -95,12 +104,12 @@ def lessons_in_course(course_id):
     course = Course.query.get(course_id)
     topics = course.get_all_topics()
     page_title = f"{course.title} - lessons - Cursus"
-    lessons_in_course = course.get_all_lessons()
+    lessons = course.get_all_lessons()
     return render_template(
         "course/lessons_in_course.html",
         page_title=page_title,
         current_user=current_user,
-        lessons_in_course=lessons_in_course,
+        lessons_in_course=lessons,
         course_id=course_id,
         topics=topics
     )
