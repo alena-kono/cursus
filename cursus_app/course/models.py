@@ -140,6 +140,14 @@ class Course(db.Model):
         all_topics = self.topics
         return all_topics
 
+    @staticmethod
+    def filter_by_tutor_and_topic(tutor_id: int, topic_id: int) -> list:
+        courses = Course.query.filter(
+            Course.topics.any(Topic.id == topic_id),
+            Course.author == tutor_id
+        ).order_by(Course.published_at.desc()).all()
+        return courses
+
 
 class Topic(db.Model):
     """Subclass of :class:`SQLAlchemy.Model`.

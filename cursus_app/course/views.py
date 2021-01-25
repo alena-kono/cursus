@@ -42,10 +42,10 @@ def process_filter():
     courses = None
 
     if all((selected_tutor_id, selected_topic_id)):
-        courses = Course.query.filter(
-            Course.id == selected_tutor_id,
-            Topic.id == selected_topic_id,
-            ).order_by(Course.published_at.desc()).all()
+        courses = Course.filter_by_tutor_and_topic(
+            tutor_id=selected_tutor_id,
+            topic_id=selected_topic_id
+        )
         if not courses:
             flash("Too many filters", "warning")
             return redirect(url_for("course.index"))
