@@ -27,12 +27,12 @@
                                     <form action="#" method="POST">
                                         <button type="submit" class="btn btn-outline-info btn-lg mb-4 w-100">Published</button>
                                     </form>
+                                    <a href="/tutorboard/courses/{{ course.id }}/lessons/" class="stretched-link"></a>
                                 {% else %}
                                     <form action="{{ url_for('tutorboard.publish_course') }}" method="POST">
                                         <button type="submit" class="btn btn-primary btn-lg mb-4 w-100" name="course_id" value="{{ course.id }}">Publish course</button>
                                     </form>
                                 {% endif %}
-                                <a href="/tutorboard/courses/{{ course.id }}/lessons/" class="stretched-link"></a>
                             </div>
                         </div>
                     </div>
