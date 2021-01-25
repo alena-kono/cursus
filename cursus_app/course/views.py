@@ -20,10 +20,10 @@ def page_not_found(error):
 def index():
     page_title = "Courses - Cursus"
     courses = Course.get_all_published_courses()
-    grouped_by_tutor = Course.query.group_by(Course.author)
+    tutors = Course.get_tutors()
     all_topics = Topic.query.all()
     form = FilterByTutorForm()
-    form.load_choices(courses=grouped_by_tutor, topics=all_topics)
+    form.load_choices(courses=tutors, topics=all_topics)
     return render_template(
         "course/courses.html",
         page_title=page_title,
@@ -55,10 +55,10 @@ def process_filter():
         courses = Topic.query.get(selected_topic_id).get_all_courses()
 
     if courses:
-        grouped_by_tutor = Course.query.group_by(Course.author)
+        tutors = Course.get_tutors()
         all_topics = Topic.query.all()
         form = FilterByTutorForm()
-        form.load_choices(courses=grouped_by_tutor, topics=all_topics)
+        form.load_choices(courses=tutors, topics=all_topics)
         return render_template(
             "course/courses.html",
             page_title=page_title,

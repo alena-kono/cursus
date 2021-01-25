@@ -117,6 +117,11 @@ class Course(db.Model):
         return User.query.get(self.author).username
 
     @staticmethod
+    def get_tutors():
+        tutors = Course.query.group_by(Course.author)
+        return tutors
+
+    @staticmethod
     def get_courses_by_tutor(tutor_id: int) -> list:
         courses_by_tutor = Course.query.filter(
             Course.author == tutor_id).order_by(
