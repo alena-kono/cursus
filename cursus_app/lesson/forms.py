@@ -32,7 +32,6 @@ class NewLessonForm(FlaskForm):
         )
     index = IntegerField(
         label="Index",
-        # validators=[DataRequired()],
         render_kw={"class": "form-control", "placeholder": "Index"}
     )
     submit = SubmitField(
