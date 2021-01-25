@@ -1,4 +1,6 @@
 from flask_wtf import FlaskForm
+from markdown import markdown
+from markdown_checklist.extension import ChecklistExtension
 from wtforms import StringField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, Length, ValidationError
 
@@ -32,6 +34,23 @@ class NewLessonForm(FlaskForm):
         label="Create",
         render_kw={"class": "btn btn-primary btn-lg mb-4 w-100"}
         )
+
+    def convert_to_html(self) -> str:
+        """Convert a markdown `self.content.data` to HTML and return
+        HTML as a unicode string.
+
+        :raises: no exceptions
+
+        :returns: HTML as unicode string
+        :rtype: str
+        """
+        if self.content.data:
+            html_content = markdown(
+                self.content.data,
+                extensions=[ChecklistExtension()]
+                )
+            return html_content
+        return None
 
     def validate_title_chars(self, title: str) -> ValidationError:
         """Validates `title` by checking whether all characters

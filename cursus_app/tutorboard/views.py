@@ -123,9 +123,10 @@ def process_create_lesson(course_id: int):
     form = NewLessonForm()
     if form.validate_on_submit():
         new_lesson = Lesson()
+        html_content = form.convert_to_html()
         new_lesson.save(
             title=form.title.data,
-            content=form.content.data,
+            content=html_content,
             course=course_id,
         )
         flash(
