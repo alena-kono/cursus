@@ -97,13 +97,16 @@ class Lesson(db.Model):
         assigned to `self.index`.
         :type index: int
 
-        :raises no exceptions:
+        :raises IndexError: when pop() raises IndexError
 
         :returns: None
         :rtype: None
         """
-        mover = lessons.pop(self.index - 1)
-        lessons.insert(index - 1, mover)
+        try:
+            mover = lessons.pop(self.index - 1)
+            lessons.insert(index - 1, mover)
+        except IndexError as e:
+            raise IndexError(e)
         for idx, lesson in enumerate(lessons, start=1):
             lesson.index = idx
 
@@ -126,19 +129,16 @@ class Lesson(db.Model):
         :returns: None
         :rtype: None
         """
-        if self.index == index:
-            return None
         if index < 0:
             raise ValueError("Index should be positive number (>0)")
         existing_lessons = self.get_all_lessons()
-        if index > len(existing_lessons) or index == 0:
-            index = len(existing_lessons)
-        if not self.index:
-            self.index = len(existing_lessons)
-            db.session.commit()
-            return None
         if existing_lessons:
-            self._reindex_lessons(existing_lessons, index)
+            if index >= len(existing_lessons) or index == 0 or not self.index:
+                self.index = len(existing_lessons)
+            else:
+                try:
+                    self._reindex_lessons(existing_lessons, index)
+                except (IndexError, ValueError):
+                    self.index = len(existing_lessons)
             db.session.commit()
             return None
-        self.index = 1

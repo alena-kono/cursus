@@ -194,8 +194,12 @@ def process_update_lesson(course_id: int, lesson_id: int):
     if lesson:
         form = NewLessonForm(obj=lesson)
         if form.validate_on_submit():
-            lesson.set_index(form.index.data)
-            form.populate_obj(lesson)
+            lesson.save(
+                title=form.title.data,
+                content=form.content.data,
+                course=course_id,
+                index=form.index.data
+            )
             lesson.update()
             flash(
                 "Lesson has been updated",
