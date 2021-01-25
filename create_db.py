@@ -1,6 +1,6 @@
 from factory import fuzzy, random
 
-from cursus_app import create_app, db
+from cursus_app import config, create_app, db
 from factories.models import (RandomCourseFactory, RandomLessonFactory,
                               RandomTopicFactory, RandomUserFactory)
 
@@ -36,5 +36,8 @@ def populate_db_with_demo_data(
 if __name__ == "__main__":
     app = create_app()
     with app.app_context():
-        create_db_tables()
-        populate_db_with_demo_data()
+        if config.DEMO_DB:
+            create_db_tables()
+            populate_db_with_demo_data()
+        else:
+            create_db_tables()

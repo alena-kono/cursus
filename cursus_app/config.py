@@ -13,3 +13,5 @@ SQLALCHEMY_DATABASE_URI = (
     ))
 
 SECRET_KEY = dotenv.get_key(".env", "FLASK_SECRET_KEY")
+
+DEMO_DB = False or dotenv.get_key(".env", "DEMO_DB")
