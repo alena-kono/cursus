@@ -69,7 +69,8 @@ def process_create_course():
         new_course.save(
             title=form.title.data,
             description=form.description.data,
-            author=current_user.id
+            author=current_user.id,
+            topics=form.topics.data
         )
         flash("New course has been successfully created", "success")
         created_course_id = Course.query.order_by(Course.id.desc()).first().id
@@ -127,7 +128,7 @@ def process_create_lesson(course_id: int):
         new_lesson.save(
             title=form.title.data,
             content=html_content,
-            course=course_id,
+            course=course_id
         )
         flash(
             message="Lesson has been created",

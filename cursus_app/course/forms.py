@@ -32,6 +32,13 @@ class NewCourseForm(FlaskForm):
         render_kw={
             "class": "form-control",
             "placeholder": "Description", "rows": 5}
+    )
+    topics = StringField(
+        label="topics",
+        render_kw={
+            "class": "form-control",
+            "placeholder": "Indicate topics separated by space"
+            }
         )
     submit = SubmitField(
         label="Create course and save it to a draft",

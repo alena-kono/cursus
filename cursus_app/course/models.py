@@ -60,7 +60,7 @@ class Course(db.Model):
         return f"<Course {self.title}>"
 
     def save(
-            self, title: str, description: str, author: int
+            self, title: str, description: str, author: int, topics: str = ""
     ) -> None:
         """Adds data and commits to the database table `course`.
 
@@ -76,6 +76,9 @@ class Course(db.Model):
         representing id of the course author (instance of :class:`User`)
         :type author: int
 
+        :param topics: represents related topics
+        :type topics: str
+
         :raises no exceptions:
 
         :returns: None
@@ -84,13 +87,31 @@ class Course(db.Model):
         self.title = title
         self.description = description
         self.author = author
+        if topics:
+            self.parse_topics(topics)
         db.session.add(self)
         db.session.commit()
+
+    def parse_topics(self, topics: str) -> None:
+        topics = topics.split()
+        for topic in topics:
+            existing_topic = Topic.query.filter(Topic.name == topic).first()
+            if existing_topic:
+                self.topics.append(existing_topic)
+            else:
+                self.topics.append(Topic(name=topic))
 
     def publish(self):
         self.is_published = True
         self.published_at = datetime.now()
         db.session.commit()
+
+    @staticmethod
+    def get_all_published_courses() -> list:
+        courses = Course.query.filter(
+            Course.is_published.is_(True)
+        ).order_by(Course.published_at.desc()).all()
+        return courses
 
     def get_author_username(self):
         return User.query.get(self.author).username
