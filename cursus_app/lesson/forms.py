@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from markdown import markdown
 from markdown_checklist.extension import ChecklistExtension
-from wtforms import StringField, SubmitField, TextAreaField
+from wtforms import IntegerField, StringField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, Length, ValidationError
 
 
@@ -30,8 +30,17 @@ class NewLessonForm(FlaskForm):
             "class": "form-control",
             "placeholder": "Content", "rows": 20}
         )
+    index = IntegerField(
+        label="Index",
+        # validators=[DataRequired()],
+        render_kw={"class": "form-control", "placeholder": "Index"}
+    )
     submit = SubmitField(
         label="Create",
+        render_kw={"class": "btn btn-primary btn-lg mb-4 w-100"}
+        )
+    submit_upd = SubmitField(
+        label="Update",
         render_kw={"class": "btn btn-primary btn-lg mb-4 w-100"}
         )
 

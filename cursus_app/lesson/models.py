@@ -61,6 +61,15 @@ class Lesson(db.Model):
         db.session.commit()
         self.set_index(index)
 
+    def update(self) -> None:
+        """Updates data and commits to the database table `lesson`.
+
+        :returns: None
+        :rtype: None
+        """
+        db.session.add(self)
+        db.session.commit()
+
     def get_all_lessons(self) -> list:
         """Gets list of lessons from db sorted by
         `Lesson.index` in the ascending order within

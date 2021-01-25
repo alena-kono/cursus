@@ -130,7 +130,7 @@ def process_create_lesson(course_id: int):
             course=course_id,
         )
         flash(
-            message="Lesson has been successfully added",
+            message="Lesson has been created",
             category="success"
         )
         return redirect(url_for("tutorboard.lessons", course_id=course_id))
@@ -146,6 +146,7 @@ def process_create_lesson(course_id: int):
 def lesson(course_id: int, lesson_id: int):
     page_title = "Tutorboard - Lesson"
     lesson = Lesson.query.get(lesson_id)
+    form = NewLessonForm()
     if lesson:
         page_title = f"Lesson {lesson.index} - {lesson.title} - Cursus"
         return render_template(
@@ -154,5 +155,59 @@ def lesson(course_id: int, lesson_id: int):
             lesson=lesson,
             course_id=course_id,
             lesson_id=lesson_id,
+            form=form
+        )
+    return abort(404)
+
+
+@tutorboard_blueprint.route(
+    "courses/<int:course_id>/lessons/<int:lesson_id>/update-lesson",
+    methods=["POST"]
+    )
+@login_required
+@author_required
+def update_lesson(course_id: int, lesson_id: int):
+    lesson = Lesson.query.get(lesson_id)
+    page_title = f"Tutorboard - update lesson #{lesson.index} {lesson.title}"
+    if lesson:
+        form = NewLessonForm(obj=lesson)
+        return render_template(
+            "tutorboard/update_lesson.html",
+            page_title=page_title,
+            lesson=lesson,
+            course_id=course_id,
+            lesson_id=lesson_id,
+            form=form
+        )
+    return "Error"
+
+
+@tutorboard_blueprint.route(
+    "courses/<int:course_id>/lessons/<int:lesson_id>/process-update-lesson",
+    methods=["POST"]
+    )
+@login_required
+@author_required
+def process_update_lesson(course_id: int, lesson_id: int):
+    lesson = Lesson.query.get(lesson_id)
+    page_title = f"Tutorboard - update lesson #{lesson.index} {lesson.title}"
+    if lesson:
+        form = NewLessonForm(obj=lesson)
+        if form.validate_on_submit():
+            lesson.set_index(form.index.data)
+            form.populate_obj(lesson)
+            lesson.update()
+            flash(
+                "Lesson has been updated",
+                "success")
+            return redirect(url_for("tutorboard.lessons", course_id=course_id))
+        get_validation_errors(form=form)
+        return render_template(
+            "tutorboard/update_lesson.html",
+            page_title=page_title,
+            lesson=lesson,
+            course_id=course_id,
+            lesson_id=lesson_id,
+            form=form
         )
     return abort(404)
