@@ -23,7 +23,7 @@ def index():
     tutors = Course.get_tutors()
     all_topics = Topic.query.all()
     form = FilterByTutorAndTopicForm()
-    form.load_choices(courses=tutors, topics=all_topics)
+    form.load_choices(tutors=tutors, topics=all_topics)
     return render_template(
         "course/courses.html",
         page_title=page_title,
@@ -58,7 +58,7 @@ def process_filter():
         tutors = Course.get_tutors()
         all_topics = Topic.query.all()
         form = FilterByTutorAndTopicForm()
-        form.load_choices(courses=tutors, topics=all_topics)
+        form.load_choices(tutors=tutors, topics=all_topics)
         return render_template(
             "course/courses.html",
             page_title=page_title,

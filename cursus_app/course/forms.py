@@ -79,10 +79,10 @@ class FilterByTutorAndTopicForm(FlaskForm):
     )
 
     @staticmethod
-    def _get_all_tutor_choices(courses: list) -> List[Tuple]:
+    def _get_all_tutor_choices(tutors: list) -> List[Tuple]:
         choices = [(0, "all")]
-        for course in courses:
-            choices.append((course.tutor, course.get_tutor_username()))
+        for tutor in tutors:
+            choices.append((tutor.id, tutor.username))
         return choices
 
     @staticmethod
@@ -92,6 +92,6 @@ class FilterByTutorAndTopicForm(FlaskForm):
             choices.append((topic.id, topic.name))
         return choices
 
-    def load_choices(self, courses: list, topics: list) -> None:
-        self.filter_by_tutor.choices = self._get_all_tutor_choices(courses)
+    def load_choices(self, tutors: list, topics: list) -> None:
+        self.filter_by_tutor.choices = self._get_all_tutor_choices(tutors)
         self.filter_by_topic.choices = self._get_all_topic_choices(topics)

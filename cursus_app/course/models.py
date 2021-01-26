@@ -141,7 +141,7 @@ class Course(db.Model):
 
     @staticmethod
     def get_tutors() -> list:
-        tutors = Course.query.group_by(Course.tutor).all()
+        tutors = User.query.filter(Course.tutor == User.id).all()
         return tutors
 
     @staticmethod
