@@ -5,8 +5,8 @@ from flask import current_app, flash, redirect, request, url_for
 from flask_login import config, current_user
 
 
-def author_required(func):
-    """View decorator that ensures current user to be the author
+def tutor_required(func):
+    """View decorator that ensures current user to be the tutor
     of the Course with `course_id` before calling the actual view.
     (If they are not, it flashes 'Access denied' warning and redirects
     to 'home.index'page).
@@ -15,8 +15,8 @@ def author_required(func):
 
     For example:
 
-        @app.route('/courses/course_id/authorboard')
-        @author_required
+        @app.route('/courses/course_id/tutorboard')
+        @tutor_required
         def publish_lesson(course_id):
             pass
 
@@ -43,10 +43,10 @@ def author_required(func):
         if current_app.config.get("LOGIN_DISABLED"):
             return func(*args, **kwargs)
         current_course = Course.query.get(course_id)
-        course_author_id = current_course.author
-        if not current_user.id == course_author_id:
+        course_tutor_id = current_course.tutor
+        if not current_user.id == course_tutor_id:
             flash(
-                "Access denied. You are not the author of course "
+                "Access denied. You are not the tutor of course "
                 f"'{current_course.title}'",
                 "danger"
                 )

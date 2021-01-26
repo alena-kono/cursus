@@ -1,4 +1,4 @@
-from cursus_app.course.decorators import author_required
+from cursus_app.course.decorators import tutor_required
 from cursus_app.course.forms import NewCourseForm
 from cursus_app.course.models import Course
 from cursus_app.lesson.forms import NewLessonForm
@@ -29,7 +29,7 @@ def page_not_found(error):
 @login_required
 def index():
     page_title = "Tutorboard - Cursus"
-    all_courses = Course.query.filter(Course.author == current_user.id).all()
+    all_courses = Course.query.filter(Course.tutor == current_user.id).all()
     return render_template(
         "tutorboard/index.html",
         page_title=page_title,
@@ -78,7 +78,7 @@ def process_create_course():
         new_course.save(
             title=form.title.data,
             description=form.description.data,
-            author=current_user.id,
+            tutor=current_user.id,
             topics=form.topics.data
         )
         flash("New course has been successfully created", "success")
@@ -94,7 +94,7 @@ def process_create_course():
 
 @tutorboard_blueprint.route("courses/<int:course_id>/lessons/")
 @login_required
-@author_required
+@tutor_required
 def lessons(course_id: int):
     course = Course.query.get(course_id)
     page_title = f"Tutorboard - Lessons - {course.title}"
@@ -110,7 +110,7 @@ def lessons(course_id: int):
 
 @tutorboard_blueprint.route("courses/<int:course_id>/lessons/create-lesson/")
 @login_required
-@author_required
+@tutor_required
 def create_lesson(course_id: int):
     page_title = "Create lesson - Cursus"
     form = NewLessonForm()
@@ -128,7 +128,7 @@ def create_lesson(course_id: int):
     methods=["POST"]
     )
 @login_required
-@author_required
+@tutor_required
 def process_create_lesson(course_id: int):
     form = NewLessonForm()
     if form.validate_on_submit():
@@ -152,7 +152,7 @@ def process_create_lesson(course_id: int):
     "courses/<int:course_id>/lessons/<int:lesson_id>/"
     )
 @login_required
-@author_required
+@tutor_required
 def lesson(course_id: int, lesson_id: int):
     page_title = "Tutorboard - Lesson"
     lesson = Lesson.query.get(lesson_id)
@@ -175,7 +175,7 @@ def lesson(course_id: int, lesson_id: int):
     methods=["POST"]
     )
 @login_required
-@author_required
+@tutor_required
 def update_lesson(course_id: int, lesson_id: int):
     lesson = Lesson.query.get(lesson_id)
     page_title = f"Tutorboard - update lesson #{lesson.index} {lesson.title}"
@@ -197,7 +197,7 @@ def update_lesson(course_id: int, lesson_id: int):
     methods=["POST"]
     )
 @login_required
-@author_required
+@tutor_required
 def process_update_lesson(course_id: int, lesson_id: int):
     lesson = Lesson.query.get(lesson_id)
     page_title = f"Tutorboard - update lesson #{lesson.index} {lesson.title}"

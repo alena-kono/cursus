@@ -64,7 +64,7 @@ class NewCourseForm(FlaskForm):
             raise ValidationError(msg)
 
 
-class FilterByTutorForm(FlaskForm):
+class FilterByTutorAndTopicForm(FlaskForm):
     filter_by_tutor = SelectField(
         label="Filter by tutor",
         coerce=int
@@ -82,7 +82,7 @@ class FilterByTutorForm(FlaskForm):
     def _get_all_tutor_choices(courses: list) -> List[Tuple]:
         choices = [(0, "all")]
         for course in courses:
-            choices.append((course.author, course.get_author_username()))
+            choices.append((course.tutor, course.get_tutor_username()))
         return choices
 
     @staticmethod

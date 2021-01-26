@@ -24,7 +24,7 @@ def populate_db_with_demo_data(
     topics = RandomTopicFactory.create_batch(size=2)
     RandomCourseFactory.create_batch(
         size=courses_num,
-        author=fuzzy.FuzzyChoice(range(1, users_num + 1)),
+        tutor=fuzzy.FuzzyChoice(range(1, users_num + 1)),
         topics=fuzzy.FuzzyChoice([topic, topics])
         )
     RandomLessonFactory.create_for_each_course(

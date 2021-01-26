@@ -39,14 +39,14 @@ class Course(db.Model):
     is_published = db.Column(
         db.Boolean, nullable=False, default=False
     )
-    author = db.Column(
+    tutor = db.Column(
         db.Integer, db.ForeignKey("user.id")
         )
     student = db.Column(
         db.Integer, db.ForeignKey("user.id")
         )
-    course_author = db.relationship(
-        "User", foreign_keys=[author]
+    course_tutor = db.relationship(
+        "User", foreign_keys=[tutor]
         )
     course_student = db.relationship(
         "User", foreign_keys=[student]
@@ -60,7 +60,7 @@ class Course(db.Model):
         return f"<Course {self.title}>"
 
     def save(
-            self, title: str, description: str, author: int, topics: str = ""
+            self, title: str, description: str, tutor: int, topics: str = ""
     ) -> None:
         """Adds data and commits to the database table `course`.
 
@@ -72,9 +72,9 @@ class Course(db.Model):
         representing course description
         :type description: str
 
-        :param author: :attr: of :class:`Course`
-        representing id of the course author (instance of :class:`User`)
-        :type author: int
+        :param tutor: :attr: of :class:`Course`
+        representing id of the course tutor (instance of :class:`User`)
+        :type tutor: int
 
         :param topics: represents related topics
         :type topics: str
@@ -86,7 +86,7 @@ class Course(db.Model):
         """
         self.title = title
         self.description = description
-        self.author = author
+        self.tutor = tutor
         if topics:
             self.parse_topics(topics)
         db.session.add(self)
@@ -113,18 +113,18 @@ class Course(db.Model):
         ).order_by(Course.published_at.desc()).all()
         return courses
 
-    def get_author_username(self):
-        return User.query.get(self.author).username
+    def get_tutor_username(self):
+        return User.query.get(self.tutor).username
 
     @staticmethod
     def get_tutors():
-        tutors = Course.query.group_by(Course.author)
+        tutors = Course.query.group_by(Course.tutor)
         return tutors
 
     @staticmethod
     def get_courses_by_tutor(tutor_id: int) -> list:
         courses_by_tutor = Course.query.filter(
-            Course.author == tutor_id).order_by(
+            Course.tutor == tutor_id).order_by(
                 Course.published_at.desc()).all()
         return courses_by_tutor
 
@@ -144,7 +144,7 @@ class Course(db.Model):
     def filter_by_tutor_and_topic(tutor_id: int, topic_id: int) -> list:
         courses = Course.query.filter(
             Course.topics.any(Topic.id == topic_id),
-            Course.author == tutor_id
+            Course.tutor == tutor_id
         ).order_by(Course.published_at.desc()).all()
         return courses
 

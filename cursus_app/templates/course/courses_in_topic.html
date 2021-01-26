@@ -22,7 +22,7 @@
         <div class="card-img-top">
             <div class="card-body text-left">
                 <h4 class="text">{{ course.title }}</h4>
-                <p>Tutor: {{ course.get_author_username() }}</p>
+                <p>Tutor: {{ course.get_tutor_username() }}</p>
                 <p>{{ course.description[:60] }}...</p>
                 <p class="font-italic">Published at {{ course.published_at.strftime('%d %b %Y') }}</p>
                 <a href="/courses/{{ course.id }}" class="stretched-link"></a>

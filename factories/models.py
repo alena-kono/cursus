@@ -37,7 +37,7 @@ class RandomCourseFactory(alchemy.SQLAlchemyModelFactory):
     published_at = Faker("date_time")
     is_active = True
     is_published = True
-    author = 1
+    tutor = 1
 
     @post_generation
     def topics(self, create, extracted, **kwargs):

@@ -1,4 +1,4 @@
-from cursus_app.course.forms import FilterByTutorForm
+from cursus_app.course.forms import FilterByTutorAndTopicForm
 from cursus_app.course.models import Course, Topic
 from cursus_app.lesson.models import Lesson
 from flask import Blueprint, abort, flash, redirect, render_template, url_for
@@ -22,7 +22,7 @@ def index():
     courses = Course.get_all_published_courses()
     tutors = Course.get_tutors()
     all_topics = Topic.query.all()
-    form = FilterByTutorForm()
+    form = FilterByTutorAndTopicForm()
     form.load_choices(courses=tutors, topics=all_topics)
     return render_template(
         "course/courses.html",
@@ -36,7 +36,7 @@ def index():
 @course_blueprint.route("/process-filter", methods=["POST"])
 def process_filter():
     page_title = "Courses - Cursus"
-    form = FilterByTutorForm()
+    form = FilterByTutorAndTopicForm()
     selected_tutor_id = form.filter_by_tutor.data
     selected_topic_id = form.filter_by_topic.data
     courses = None
@@ -57,7 +57,7 @@ def process_filter():
     if courses:
         tutors = Course.get_tutors()
         all_topics = Topic.query.all()
-        form = FilterByTutorForm()
+        form = FilterByTutorAndTopicForm()
         form.load_choices(courses=tutors, topics=all_topics)
         return render_template(
             "course/courses.html",
