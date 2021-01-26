@@ -133,12 +133,12 @@ class Lesson(db.Model):
             raise ValueError("Index should be positive number (>0)")
         existing_lessons = self.get_all_lessons()
         if existing_lessons:
-            if index >= len(existing_lessons) or index == 0 or not self.index:
+            if not self.index:
                 self.index = len(existing_lessons)
-            else:
-                try:
-                    self._reindex_lessons(existing_lessons, index)
-                except (IndexError, ValueError):
-                    self.index = len(existing_lessons)
+                db.session.commit()
+                return None
+            if index >= len(existing_lessons) or index == 0:
+                index = len(existing_lessons)
+            self._reindex_lessons(existing_lessons, index)
             db.session.commit()
             return None
