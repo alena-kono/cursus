@@ -136,22 +136,46 @@ class Course(db.Model):
         ).order_by(Course.published_at.desc()).all()
         return courses
 
-    def get_tutor_username(self):
+    def get_tutor_username(self) -> str:
+        """Gets username of the User with`self.tutor`.id of
+        course with `self.id`
+
+        :returns: username of tutor of the course
+        :rtype: str
+        """
         return User.query.get(self.tutor).username
 
     @staticmethod
     def get_tutors() -> list:
+        """Gets list of all tutors from database.
+
+        :returns: list of `User` instances which are tutors of
+        all the courses
+        :rtype: list
+        """
         tutors = User.query.filter(Course.tutor == User.id).all()
         return tutors
 
     @staticmethod
     def get_courses_by_tutor(tutor_id: int) -> list:
+        """Gets list of all courses by `User` with
+        `tutor_id` from database.
+
+        :returns: list of `Courses` instances
+        :rtype: list
+        """
         courses_by_tutor = Course.query.filter(
             Course.tutor == tutor_id).order_by(
                 Course.published_at.desc()).all()
         return courses_by_tutor
 
     def get_all_lessons(self) -> list:
+        """Gets list of all lessons within `Course`
+         with `self.id` from database.
+
+        :returns: list of `Lesson` instances within one course
+        :rtype: list
+        """
         lessons = db.session.query(Lesson).filter(
             Course.id == Lesson.course
         ).filter(
@@ -160,11 +184,23 @@ class Course(db.Model):
         return lessons
 
     def get_all_topics(self) -> list:
+        """Gets list of all topics within `Course`
+        with `self.id` from database.
+
+        :returns: list of `Topic` instances within one course
+        :rtype: list
+        """
         all_topics = self.topics
         return all_topics
 
     @staticmethod
     def filter_by_tutor_and_topic(tutor_id: int, topic_id: int) -> list:
+        """Gets list of all courses filtered by `Course.tutor` with `tutor_id`
+        and `Topic.id` with `topic.id`
+
+        :returns: list of `Course` instances
+        :rtype: list
+        """
         courses = Course.query.filter(
             Course.topics.any(Topic.id == topic_id),
             Course.tutor == tutor_id
@@ -188,6 +224,11 @@ class Topic(db.Model):
         return f"<Topic {self.name}>"
 
     def get_all_courses(self) -> list:
+        """Gets list of all courses within `Topic` with `self.id`
+
+         :returns: list of `Course` instances
+         :rtype: list
+         """
         courses_by_topic = Course.query.filter(
             Course.topics.any(Topic.id == self.id)
             ).all()

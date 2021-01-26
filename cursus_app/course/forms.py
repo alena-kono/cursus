@@ -65,6 +65,17 @@ class NewCourseForm(FlaskForm):
 
 
 class FilterByTutorAndTopicForm(FlaskForm):
+    """Subclass of :class: `flask_wtf.Flask-Form`.
+    Represents form for filtering courses by two fields:
+    `tutors` and `topics`.
+
+    :attr filter_by_tutor: SelectField with integer values
+
+    :attr filter_by_topic: SelectField with integer values
+
+    :attr submit: SubmitField
+    Represents 'Show' submit button when filtering courses
+    """
     filter_by_tutor = SelectField(
         label="Filter by tutor",
         coerce=int
@@ -80,6 +91,14 @@ class FilterByTutorAndTopicForm(FlaskForm):
 
     @staticmethod
     def _get_all_tutor_choices(tutors: list) -> List[Tuple]:
+        """Repacks list with `User()` instances - `tutors` -
+        into list of tuples (`tutor.id`, `tutor.username`).
+
+        :param tutors: unique list of Users that are tutors
+        :type: list
+        :return: list of tuple pairs (tutor.id, tutor.username)
+        :rtype: List[Tuple]
+        """
         choices = [(0, "all")]
         for tutor in tutors:
             choices.append((tutor.id, tutor.username))
@@ -87,11 +106,30 @@ class FilterByTutorAndTopicForm(FlaskForm):
 
     @staticmethod
     def _get_all_topic_choices(topics: list) -> List[Tuple]:
+        """Repacks list with `Topic()` instances - `topics` -
+        into list of tuples (`topic.id`, `topic.name`).
+
+        :param topics: unique list of Topics
+        :type: list
+        :return: list of tuple pairs (topic.id, topic.name)
+        :rtype: List[Tuple]
+        """
         choices = [(0, "all")]
         for topic in topics:
             choices.append((topic.id, topic.name))
         return choices
 
     def load_choices(self, tutors: list, topics: list) -> None:
+        """Loads choices for two fields in a `FilterByTutorAndTopicForm`.
+
+        :param tutors: list of tuples (`tutor.id`, `tutor.username`)
+        :type: List[Tuple]
+
+        :param topics: list of tuples (`topic.id`, `topic.name`)
+        :type: List[Tuple]
+
+        :return: None
+        :rtype: None
+        """
         self.filter_by_tutor.choices = self._get_all_tutor_choices(tutors)
         self.filter_by_topic.choices = self._get_all_topic_choices(topics)
