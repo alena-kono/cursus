@@ -93,6 +93,16 @@ class Course(db.Model):
         db.session.commit()
 
     def parse_topics(self, topics: str) -> None:
+        """Parses topics from passed string `topics` into list, creates
+        new `Topic()` instance if it is not presented in the database and
+        appends them to `self.topics`. If any topic exists at the database then
+        parsed topics is appended to `self.topics`.
+
+        :param topics: represents list of topics separated by a whitespace
+        :type: str
+        :return: None
+        :rtype: None
+        """
         topics = topics.split()
         for topic in topics:
             existing_topic = Topic.query.filter(Topic.name == topic).first()
@@ -101,13 +111,26 @@ class Course(db.Model):
             else:
                 self.topics.append(Topic(name=topic))
 
-    def publish(self):
+    def publish(self) -> None:
+        """Makes `self.Course()` published by setting
+        `self.published` as `True` and `self.published_at`
+        as current datetime
+
+        :return: None
+        :rtype: None
+        """
         self.is_published = True
         self.published_at = datetime.now()
         db.session.commit()
 
     @staticmethod
     def get_all_published_courses() -> list:
+        """Gets list of all courses from database which are published
+        and sorted by `Course.published_at` in the descending order
+
+        :returns: list of `Course` instances
+        :rtype: list
+        """
         courses = Course.query.filter(
             Course.is_published.is_(True)
         ).order_by(Course.published_at.desc()).all()
@@ -117,8 +140,8 @@ class Course(db.Model):
         return User.query.get(self.tutor).username
 
     @staticmethod
-    def get_tutors():
-        tutors = Course.query.group_by(Course.tutor)
+    def get_tutors() -> list:
+        tutors = Course.query.group_by(Course.tutor).all()
         return tutors
 
     @staticmethod

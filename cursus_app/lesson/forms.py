@@ -13,7 +13,14 @@ class NewLessonForm(FlaskForm):
 
     :attr content: TextAreaField
 
+    :attr index: IntegerField
+    Represents serial number of lesson in a course
+
     :attr submit: SubmitField
+    Represents 'Create' submit button when creating lessons
+
+    :attr submit_upd: SubmitField
+    Represents 'Update' submit button when updating lessons
     """
     title = StringField(
         label="Title",
