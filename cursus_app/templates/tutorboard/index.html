@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section>
+    <div class="container text-center py-4">
+        <div class="row mt-lg-5">
+            <div class="col">
+                <h1 class="display-4">{{ page_title }}</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="album py-3 bg-light">
+<div class="container">
+
+    <div class="row">
+            {% for course in courses %}
+                <div class="col-md-3">
+                    <div class="card md-light mb-3 text-center">
+                        <img src="{{ url_for('static', filename='images/course-topics.jpg') }}" class="card-img-fluid" alt="img">
+                            <div class="card-img-top">
+                                <div class="card-body">
+                                <h4 class="text">{{ course.title }}</h4>
+                                <p>{{ course.description[:60] }}...</p>
+                                {% if course.is_published %}
+                                    <form action="#" method="POST">
+                                        <button type="submit" class="btn btn-outline-info btn-lg mb-4 w-100">Published</button>
+                                    </form>
+                                    <a href="/tutorboard/courses/{{ course.id }}/lessons/" class="stretched-link"></a>
+                                {% else %}
+                                    <form action="{{ url_for('tutorboard.publish_course') }}" method="POST">
+                                        <button type="submit" class="btn btn-primary btn-lg mb-4 w-100" name="course_id" value="{{ course.id }}">Publish course</button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        <div class="col-md-3">
+            <div class="card md-light mb-3 text-center">
+                <img src="{{ url_for('static', filename='images/tutorboard-plus.jpg') }}" class="card-img-fluid" alt="img">
+                    <div class="card-img-top">
+                        <div class="card-body">
+                            <h4 class="text">Create new course</h4>
+                            <a href="{{ url_for('tutorboard.create_course') }}" class="stretched-link"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </div>
+    </div>
+</div>
+</div>
+
+{% endblock %}

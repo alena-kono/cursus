@@ -62,7 +62,7 @@ def process_signup():
         new_user = User()
         new_user.save(
             username=form.username.data,
-            password=form.password_1.data
+            password=form.password_first.data
             )
         flash(
             "You've successfully signed up for Cursus!\nPlease log in.",

@@ -5,11 +5,40 @@
     <div class="container text-center py-4">
         <div class="row mt-lg-5">
             <div class="col">
-                <h1 class="display-4">Courses</h1>
+                <h1 class="display-4">{{ page_title }}</h1>
             </div>
         </div>
     </div>
 </section>
+
+
+<div class="container">
+    <div class="row">
+        <form action="{{ url_for('course.process_filter') }}" method="POST">
+            <div class="row">
+                <div class="col-auto">
+                    {{ form.csrf_token }}
+                    {{ form.hidden_tag() }}
+                    <div class="form-group">
+                        {{ form.filter_by_tutor.label }}
+                        {{ form.filter_by_tutor() }}
+                    </div>
+                </div>
+                <div class="col-auto">
+                    {{ form.csrf_token }}
+                    {{ form.hidden_tag() }}
+                    <div class="form-group">
+                        {{ form.filter_by_topic.label }}
+                        {{ form.filter_by_topic() }}
+                    </div>
+                </div>
+                <div class="col-auto">
+                    {{ form.submit }}
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 
 <div class="album py-3 bg-light">
 <div class="container">
@@ -23,8 +52,11 @@
             <div class="card-body text-left">
                 <h4 class="text">{{ course.title }}</h4>
                 <p>{{ course.description[:60] }}...</p>
-                <p>Author: {{ course.get_author_username() }}</p>
-                <p class="font-italic">Published: {{ course.published_at }}</p>
+                <p>Tutor: {{ course.get_tutor_username() }}</p>
+                <p class="font-italic">Published at {{ course.published_at.strftime('%d %b %Y') }}</p>
+                {% for topic in course.get_all_topics() %}
+                <span class="badge badge-pill badge-info">{{ topic.name }}</span>
+                {% endfor %}
                 <a href="/courses/{{ course.id }}" class="stretched-link"></a>
             </div>
         </div>

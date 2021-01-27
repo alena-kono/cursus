@@ -1,13 +1,7 @@
-from create_db import setup_demo_db
 from flask import Blueprint, render_template
 from flask_login import current_user
 
 home_blueprint = Blueprint("home", __name__)
-
-
-@home_blueprint.before_app_first_request
-def setup_db():
-    setup_demo_db()
 
 
 @home_blueprint.route("/")

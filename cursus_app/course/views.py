@@ -1,23 +1,72 @@
-from cursus_app.course.forms import NewCourse
+from cursus_app.course.forms import FilterByTutorAndTopicForm
 from cursus_app.course.models import Course, Topic
 from cursus_app.lesson.models import Lesson
-from flask import Blueprint, flash, redirect, render_template, url_for
+from flask import Blueprint, abort, flash, redirect, render_template, url_for
 from flask_login import current_user, login_required
-from cursus_app.course.decorators import author_required
 
 course_blueprint = Blueprint("course", __name__, url_prefix="/courses")
+
+
+@course_blueprint.errorhandler(404)
+def page_not_found(error):
+    page_title = "Page not found"
+    return render_template(
+        "404.html",
+        page_title=page_title
+        )
 
 
 @course_blueprint.route("/")
 def index():
     page_title = "Courses - Cursus"
-    courses = Course.query.order_by(Course.published_at.desc()).all()
+    courses = Course.get_all_published_courses()
+    tutors = Course.get_tutors()
+    all_topics = Topic.query.all()
+    form = FilterByTutorAndTopicForm()
+    form.load_choices(tutors=tutors, topics=all_topics)
     return render_template(
         "course/courses.html",
         page_title=page_title,
         current_user=current_user,
-        courses=courses
+        courses=courses,
+        form=form
     )
+
+
+@course_blueprint.route("/process-filter", methods=["POST"])
+def process_filter():
+    page_title = "Courses - Cursus"
+    form = FilterByTutorAndTopicForm()
+    selected_tutor_id = form.filter_by_tutor.data
+    selected_topic_id = form.filter_by_topic.data
+    courses = None
+
+    if all((selected_tutor_id, selected_topic_id)):
+        courses = Course.filter_by_tutor_and_topic(
+            tutor_id=selected_tutor_id,
+            topic_id=selected_topic_id
+        )
+        if not courses:
+            flash("Too many filters", "warning")
+            return redirect(url_for("course.index"))
+    if selected_tutor_id and not courses:
+        courses = Course.get_courses_by_tutor(tutor_id=selected_tutor_id)
+    if selected_topic_id and not courses:
+        courses = Topic.query.get(selected_topic_id).get_all_courses()
+
+    if courses:
+        tutors = Course.get_tutors()
+        all_topics = Topic.query.all()
+        form = FilterByTutorAndTopicForm()
+        form.load_choices(tutors=tutors, topics=all_topics)
+        return render_template(
+            "course/courses.html",
+            page_title=page_title,
+            current_user=current_user,
+            courses=courses,
+            form=form
+        )
+    return redirect(url_for("course.index"))
 
 
 @course_blueprint.route("/topics/")
@@ -32,81 +81,54 @@ def topics():
     )
 
 
-@course_blueprint.route("/topics/<topic_name>")
-def courses_in_topic(topic_name):
-    page_title = f"{topic_name} - Cursus"
-    courses_in_topic = Course.query.filter(
-        Course.topics.any(Topic.name == topic_name)
+@course_blueprint.route("/topics/<topic_id>")
+def courses_in_topic(topic_id):
+    topic = Topic.query.get(topic_id)
+    if topic:
+        page_title = f"{topic.name} - Cursus"
+        courses_in_topic = topic.get_all_courses()
+        return render_template(
+            "course/courses_in_topic.html",
+            page_title=page_title,
+            current_user=current_user,
+            courses_in_topic=courses_in_topic,
+            topic=topic
         )
-    return render_template(
-        "course/courses_in_topic.html",
-        page_title=page_title,
-        current_user=current_user,
-        courses_in_topic=courses_in_topic,
-        topic_name=topic_name
-    )
+    return abort(404)
 
 
 @course_blueprint.route("/<int:course_id>")
+@course_blueprint.route("/<int:course_id>/lessons/")
 @login_required
 def lessons_in_course(course_id):
-    page_title = f"{Course.query.get(course_id).title} - lessons - Cursus"
-    lessons_in_course = Lesson.query.join(Course).filter(
-        Course.id == Lesson.course
-        ).filter(Course.id == course_id).all()
+    course = Course.query.get(course_id)
+    topics = course.get_all_topics()
+    page_title = f"{course.title} - lessons - Cursus"
+    lessons = course.get_all_lessons()
     return render_template(
         "course/lessons_in_course.html",
         page_title=page_title,
         current_user=current_user,
-        lessons_in_course=lessons_in_course
+        lessons_in_course=lessons,
+        course_id=course_id,
+        topics=topics
     )
 
 
-@course_blueprint.route("/create")
-@login_required
-def create():
-    page_title = "Create a course - Cursus"
-    new_course_form = NewCourse()
-    return render_template(
-        "course/create.html",
-        page_title=page_title,
-        current_user=current_user,
-        form=new_course_form
+@course_blueprint.route(
+    "/<int:course_id>/lessons/<int:lesson_id>/"
     )
-
-
-@course_blueprint.route("/process-create", methods=["POST"])
 @login_required
-def process_create():
-    form = NewCourse()
-    if form.validate_on_submit():
-        new_course = Course()
-        new_course.save(
-            title=form.title.data,
-            description=form.description.data,
-            author=current_user.id
+def lesson(course_id: int, lesson_id: int):
+    page_title = "Lesson - Cursus"
+    lesson = Lesson.query.get(lesson_id)
+    if lesson:
+        page_title = f"Lesson {lesson.index} - {lesson.title} - Cursus"
+        return render_template(
+            "course/lesson.html",
+            page_title=page_title,
+            lesson=lesson,
+            course_id=course_id,
+            lesson_id=lesson_id,
         )
-        flash("New course has been successfully created", "success")
-        created_course_id = Course.query.order_by(Course.id.desc()).first().id
-        return redirect(url_for(
-            "course.authorboard",
-            course_id=created_course_id)
-            )
-    flash("Please, fill in the all fields", "warning")
-    return redirect(url_for("course.create_course"))
-
-
-@course_blueprint.route("/<int:course_id>/authorboard/")
-@login_required
-@author_required
-def authorboard(course_id: int):
-    page_title = "Authorboard - Cursus"
-    lessons_in_course = Lesson.query.join(Course).filter(
-        Course.id == Lesson.course
-        ).filter(Course.id == course_id).order_by(Lesson.index.asc()).all()
-    return render_template(
-        "course/authorboard.html",
-        page_title=page_title,
-        current_user=current_user,
-        lessons_in_course=lessons_in_course
-    )
+    return abort(404)
