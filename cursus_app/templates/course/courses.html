@@ -2,8 +2,8 @@
 {% block content %}
 
 <section>
-    <div class="container text-center py-4">
-        <div class="row mt-lg-5">
+    <div class="container text-center py-1">
+        <div class="row mt-lg-3">
             <div class="col">
                 <h1 class="display-4">{{ page_title }}</h1>
             </div>
@@ -47,7 +47,7 @@
     {% for course in courses %}
     <div class="col-md-3">
         <div class="card md-light mb-3 text-center">
-        <img src="{{ url_for('static', filename='images/course-main.jpg') }}" class="card-img-fluid" alt="img">
+        <img src="{{ course.image_url }}" class="card-img-top" alt="img">
         <div class="card-img-top">
             <div class="card-body text-left">
                 <h4 class="text">{{ course.title }}</h4>

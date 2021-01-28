@@ -18,7 +18,7 @@ def page_not_found(error):
 
 @course_blueprint.route("/")
 def index():
-    page_title = "Courses - Cursus"
+    page_title = "Courses"
     courses = Course.get_all_published_courses()
     tutors = Course.get_tutors()
     all_topics = Topic.query.all()
@@ -35,7 +35,7 @@ def index():
 
 @course_blueprint.route("/process-filter", methods=["POST"])
 def process_filter():
-    page_title = "Courses - Cursus"
+    page_title = "Courses"
     form = FilterByTutorAndTopicForm()
     selected_tutor_id = form.filter_by_tutor.data
     selected_topic_id = form.filter_by_topic.data
@@ -71,7 +71,7 @@ def process_filter():
 
 @course_blueprint.route("/topics/")
 def topics():
-    page_title = "Topics - Cursus"
+    page_title = "Topics"
     all_topics = Topic.query.all()
     return render_template(
         "course/topics.html",
@@ -85,7 +85,7 @@ def topics():
 def courses_in_topic(topic_id):
     topic = Topic.query.get(topic_id)
     if topic:
-        page_title = f"{topic.name} - Cursus"
+        page_title = f"{topic.name}"
         courses_in_topic = topic.get_all_courses()
         return render_template(
             "course/courses_in_topic.html",
@@ -120,10 +120,10 @@ def lessons_in_course(course_id):
     )
 @login_required
 def lesson(course_id: int, lesson_id: int):
-    page_title = "Lesson - Cursus"
+    page_title = "Lesson"
     lesson = Lesson.query.get(lesson_id)
     if lesson:
-        page_title = f"Lesson {lesson.index} - {lesson.title} - Cursus"
+        page_title = f"Lesson {lesson.index} - {lesson.title}"
         return render_template(
             "course/lesson.html",
             page_title=page_title,
