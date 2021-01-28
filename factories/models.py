@@ -38,6 +38,7 @@ class RandomCourseFactory(alchemy.SQLAlchemyModelFactory):
     is_active = True
     is_published = True
     tutor = 1
+    image_url = Faker("image_url")
 
     @post_generation
     def topics(self, create, extracted, **kwargs):
@@ -55,7 +56,7 @@ class RandomLessonFactory(alchemy.SQLAlchemyModelFactory):
         sqlalchemy_session = db.session
     id = Sequence(lambda n: n + 1)
     title = Faker("word")
-    content = Faker("paragraph", locale="en_US")
+    content = Faker("paragraph", nb_sentences=150, locale="en_US")
     course = 1
     index = 1
 

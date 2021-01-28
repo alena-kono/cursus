@@ -42,6 +42,9 @@ class Course(db.Model):
     tutor = db.Column(
         db.Integer, db.ForeignKey("user.id")
         )
+    image_url = db.Column(
+        db.String, nullable=True
+    )
     student = db.Column(
         db.Integer, db.ForeignKey("user.id")
         )
