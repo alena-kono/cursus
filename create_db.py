@@ -38,6 +38,9 @@ if __name__ == "__main__":
     with app.app_context():
         if config.DEMO_DB:
             create_db_tables()
-            populate_db_with_demo_data()
+            populate_db_with_demo_data(
+                courses_num=20,
+                lessons_per_course_num=10
+            )
         else:
             create_db_tables()
