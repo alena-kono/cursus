@@ -103,7 +103,7 @@ def courses_in_topic(topic_id):
 def lessons_in_course(course_id):
     course = Course.query.get(course_id)
     topics = course.get_all_topics()
-    page_title = f"{course.title} - lessons - Cursus"
+    page_title = f"Course {course.title} - lessons"
     lessons = course.get_all_lessons()
     return render_template(
         "course/lessons_in_course.html",

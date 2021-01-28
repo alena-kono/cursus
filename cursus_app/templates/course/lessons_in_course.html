@@ -2,13 +2,13 @@
 {% block content %}
 
 <section>
-    <div class="container text-center py-4">
+    <div class="container text-center py-1">
         <div class="row mt-lg-5">
             <div class="col">
-                <h1 class="display-4">{{page_title}}</h1>
+                <h1 class="display-4">{{ page_title }}</h1>
                 <span>Marked topics</span>
                 {% for topic in topics %}
-                <span class="badge badge-pill badge-secondary">{{ topic.name }}</span>
+                    <span class="badge badge-pill badge-secondary">{{ topic.name }}</span>
                 {% endfor %}
             </div>
         </div>
@@ -16,28 +16,28 @@
 </section>
 
 <div class="album py-3 bg-light">
-<div class="container">
-
-    <div class="row">
-    {% for lesson in lessons_in_course %}
-    <div class="col-md-3">
-        <div class="card md-light mb-3 text-center">
-        <img src="{{ url_for('static', filename='images/course-topics.jpg') }}" class="card-img-fluid" alt="img">
-        <div class="card-img-top">
-            <div class="card-body">
-                <h4 class="text">{{ lesson.title }}</h4>
-                <p>{{ lesson.index }}<p>
-                <a href="{{ url_for('course.lesson', course_id=course_id, lesson_id=lesson.id) }}" class="stretched-link"></a>
+    <div class="container">
+        <div class="row">
+        {% for lesson in lessons_in_course %}
+            <div class="col-md-6">
+                <div class="card text-left mt-4">
+                      <div class="card-header">
+                            Lesson # {{ lesson.index }}
+                      </div>
+                      <div class="card-body">
+                            <h5 class="card-title">{{ lesson.title }}</h5>
+                            <p class="card-text">{{ lesson.content[:60] }}...</p>
+                            <a href="{{ url_for('course.lesson', course_id=course_id, lesson_id=lesson.id) }}" class="btn btn-primary">Go and learn</a>
+                      </div>
+                      <div class="card-footer text-muted">
+                            Reading time: {{ (lesson.content.split()|length / 200)|round|int }} mins
+                      </div>
+                </div>
             </div>
-        </div>
+        {% endfor %}
         </div>
     </div>
-    {% endfor %}
+</div>
 
-        </div>
-    </div>
-    </div>
-</div>
-</div>
 
 {% endblock %}
