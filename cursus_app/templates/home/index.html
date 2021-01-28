@@ -1,19 +1,33 @@
 {% extends "base.html" %}
 {% block content %}
 
-<section class="py-5 text-center container">
-    <div class="row py-lg-5">
-        <div class="col-lg-6 col-md-8 mx-auto">
-            <h1 class="fw-light">Welcome to Cursus</h1>
-            <p class="lead text-muted">Cursus is a platform for sharing knowledge.
-                You can easily create your own course and fill it with some lessons or attend another user's course.</p>
-            <p>
-                <a href="{{ url_for('auth.login') }}" class="btn btn-primary my-2">Log In</a>
-                <a href="{{ url_for('auth.signup') }}" class="btn btn-secondary my-2">Sign Up</a>
-            </p>
+{% if current_user.is_authenticated %}
+    <section class="py-2 text-center container">
+        <div class="row py-lg-5">
+            <div class="col-lg-6 col-md-8 mx-auto">
+                <h1 class="fw-light">{{ current_user.username }}, welcome to Cursus</h1>
+                <p class="lead text-muted">As for now you can only create and publish course at the tutorboard</p>
+                <p>
+                    <a href="{{ url_for('tutorboard.index') }}" class="btn btn-primary btn-lg my-2">Go to tutorboard</a>
+                </p>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
+{% else %}
+    <section class="py-5 text-center container">
+        <div class="row py-lg-5">
+            <div class="col-lg-6 col-md-8 mx-auto">
+                <h1 class="fw-light">Welcome to Cursus</h1>
+                <p class="lead text-muted">Cursus is a platform for sharing knowledge.
+                    You can easily create your own course and fill it with some lessons or attend another user's course.</p>
+                <p>
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-primary my-2">Log In</a>
+                    <a href="{{ url_for('auth.signup') }}" class="btn btn-secondary my-2">Sign Up</a>
+                </p>
+            </div>
+        </div>
+    </section>
+{% endif %}
 
     <div class="album py-5 bg-light">
         <div class="container">
