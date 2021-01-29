@@ -20,6 +20,7 @@ def create_app():
     login_manager = LoginManager()
     login_manager.init_app(app)
     login_manager.login_view = "auth.login"
+    login_manager.login_message_category = "info"
     app.register_blueprint(home_blueprint)
     app.register_blueprint(auth_blueprint)
     app.register_blueprint(course_blueprint)
