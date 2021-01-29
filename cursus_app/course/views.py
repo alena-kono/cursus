@@ -86,17 +86,19 @@ def topics():
 @login_required
 def lessons_in_course(course_id):
     course = Course.query.get(course_id)
-    topics = course.get_all_topics()
-    page_title = f"Course {course.title} - lessons"
-    lessons = course.get_all_lessons()
-    return render_template(
-        "course/lessons_in_course.html",
-        page_title=page_title,
-        current_user=current_user,
-        lessons_in_course=lessons,
-        course_id=course_id,
-        topics=topics
-    )
+    if course:
+        topics = course.get_all_topics()
+        page_title = f"Course {course.title} - lessons"
+        lessons = course.get_all_lessons()
+        return render_template(
+            "course/lessons_in_course.html",
+            page_title=page_title,
+            current_user=current_user,
+            lessons_in_course=lessons,
+            course_id=course_id,
+            topics=topics
+        )
+    abort(404)
 
 
 @course_blueprint.route(

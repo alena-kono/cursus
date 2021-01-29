@@ -25,11 +25,11 @@
                       </div>
                       <div class="card-body">
                             <h5 class="card-title">{{ lesson.title }}</h5>
-                            <p class="card-text">{{ lesson.content[:60] }}...</p>
+                            <p class="card-text">{{ lesson.content[:60] | safe }}...</p>
                             <a href="{{ url_for('tutorboard.lesson', course_id=course_id, lesson_id=lesson.id) }}" class="stretched-link"></a>
                       </div>
                       <div class="card-footer text-muted">
-                            Reading time: {{ (lesson.content.split()|length / 200)|round|int }} mins
+                            Reading time: {{ (lesson.content.split() | length / 200) | round | int }} mins
                       </div>
                 </div>
             </div>
