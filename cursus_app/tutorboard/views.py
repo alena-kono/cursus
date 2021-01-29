@@ -59,7 +59,7 @@ def publish_course():
 @tutorboard_blueprint.route("/create-course/")
 @login_required
 def create_course():
-    page_title = "Create a course - Cursus"
+    page_title = "Create new course - Cursus"
     form = NewCourseForm()
     return render_template(
         "tutorboard/create_course.html",
@@ -97,7 +97,7 @@ def process_create_course():
 @tutor_required
 def lessons(course_id: int):
     course = Course.query.get(course_id)
-    page_title = f"Tutorboard - Lessons - {course.title}"
+    page_title = f"Tutorboard - '{course.title}' - lessons"
     lessons = course.get_all_lessons()
     return render_template(
         "tutorboard/lessons.html",
@@ -112,7 +112,7 @@ def lessons(course_id: int):
 @login_required
 @tutor_required
 def create_lesson(course_id: int):
-    page_title = "Create lesson - Cursus"
+    page_title = "Create lesson"
     form = NewLessonForm()
     return render_template(
         "tutorboard/create_lesson.html",
@@ -158,7 +158,7 @@ def lesson(course_id: int, lesson_id: int):
     lesson = Lesson.query.get(lesson_id)
     form = NewLessonForm()
     if lesson:
-        page_title = f"Lesson {lesson.index} - {lesson.title} - Cursus"
+        page_title = f"Lesson {lesson.index} - {lesson.title}"
         return render_template(
             "tutorboard/lesson.html",
             page_title=page_title,
