@@ -2,8 +2,8 @@
 {% block content %}
 
 <section>
-    <div class="container text-center py-4">
-        <div class="row mt-lg-5">
+    <div class="container text-center py-1">
+        <div class="row mt-lg-3">
             <div class="col">
                 <h1 class="display-4">Topics</h1>
             </div>
@@ -12,27 +12,29 @@
 </section>
 
 <div class="album py-3 bg-light">
-<div class="container">
-
-    <div class="row">
-    {% for topic in topics %}
-    <div class="col-md-3">
-        <div class="card md-light mb-3 text-center">
-        <img src="{{ url_for('static', filename='images/course-topics.jpg') }}" class="card-img-fluid" alt="img">
-        <div class="card-img-top">
-            <div class="card-body">
-                <h4 class="text">{{ topic.name }}</h4>
-                <a href="{{ url_for('course.courses_in_topic', topic_id=topic.id) }}" class="stretched-link"></a>
-            </div>
-        </div>
+    <div class="container">
+        <div class="row">
+            {% for topic in topics %}
+                <div class="col-md-4 mt-5">
+                    <ul class="list-group">
+                        {% with courses = topic.get_all_courses() %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center" style="background-color: rgb(31, 187, 214);">
+                            <h1 style="font-size: 1.3rem;">{{ topic.name }}</h1>
+                            <span class="badge badge-primary badge-pill">{{ courses | length }}</span>
+                        </li>
+                            {% for course in courses %}
+                            <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                {{ course.title }}
+                                <a href="{{ url_for('course.lessons_in_course', course_id=course.id) }}" class="stretched-link"></a>
+                                <span class="badge badge-primary badge-pill">{{ course.get_all_lessons() | length }}</span>
+                            </li>
+                            {% endfor %}
+                        {% endwith %}
+                    </ul>
+                </div>
+            {% endfor %}
         </div>
     </div>
-    {% endfor %}
-
-        </div>
-    </div>
-    </div>
-</div>
 </div>
 
 {% endblock %}

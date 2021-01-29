@@ -81,22 +81,6 @@ def topics():
     )
 
 
-@course_blueprint.route("/topics/<topic_id>")
-def courses_in_topic(topic_id):
-    topic = Topic.query.get(topic_id)
-    if topic:
-        page_title = f"{topic.name}"
-        courses = topic.get_all_courses()
-        return render_template(
-            "course/courses_in_topic.html",
-            page_title=page_title,
-            current_user=current_user,
-            courses=courses,
-            topic=topic
-        )
-    return abort(404)
-
-
 @course_blueprint.route("/<int:course_id>")
 @course_blueprint.route("/<int:course_id>/lessons/")
 @login_required
