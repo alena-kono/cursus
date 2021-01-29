@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Bootstrap CSS -->
+        <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous"> -->
+        <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/custom.css') }}" rel="stylesheet">
+        <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+
+        <title>{{ page_title }} - Cursus</title>
+    </head>
+    <body style="padding-top: 5%">
+        <main>
+            <div class="container text-center py-1">
+                <div class="row mb-lg-3">
+                    <div class="col">
+                        <h1 class="display-1" style="color: navy;">{{ page_title }}</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+
+                <div class="jumbotron">
+                    <h1 class="display-3">Simple content management</h1>
+                    <p class="lead" style="font-size: 2.3rem;">
+                        Implement opportunity (at tutorboard) to remove courses and lessons, to hide them,
+                        to upload images.
+                        Add comments & attachments.
+                    </p>
+                </div>
+                <div class="jumbotron">
+                    <h1 class="display-3">Full text search</h1>
+                    <p class="lead" style="font-size: 2.3rem;">
+                        Course description as a search index.
+                    </p>
+                </div>
+                <div class="jumbotron">
+                    <h1 class="display-3">User profile</h1>
+                    <p class="lead" style="font-size: 2.3rem;">
+                        Implement simple user profile (MVP).
+                    </p>
+                </div>
+                <div class="jumbotron">
+                    <h1 class="display-3">Pagination</h1>
+                    <p class="lead" style="font-size: 2.3rem;">
+                        Add pagination at every page where blocks of content are displayed.
+                    </p>
+                </div>
+                <div class="jumbotron">
+                    <h1 class="display-3">Students & Studentboard</h1>
+                    <p class="lead" style="font-size: 2.3rem;">
+                        Develop studentboard (MVP) with opportunities to enroll courses and
+                        take lessons.
+                    </p>
+                </div>
+
+            </div>
+        </main>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+    </body>
+</html>

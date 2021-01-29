@@ -17,3 +17,12 @@ def index():
         blocks=blocks_to_display,
         current_user=current_user
     )
+
+
+@home_blueprint.route("/plans/")
+def plans():
+    page_title = "Plans for the project"
+    return render_template(
+        "plans.html",
+        page_title=page_title,
+    )
