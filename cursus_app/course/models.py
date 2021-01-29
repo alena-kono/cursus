@@ -108,6 +108,7 @@ class Course(db.Model):
         """
         topics = topics.split()
         for topic in topics:
+            topic = topic.lower()
             existing_topic = Topic.query.filter(Topic.name == topic).first()
             if existing_topic:
                 self.topics.append(existing_topic)

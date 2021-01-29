@@ -27,7 +27,10 @@ class NewCourseForm(FlaskForm):
         label="Description",
         validators=[
             DataRequired(),
-            Length(max=255, message="Description should be 255 characters max")
+            Length(
+                max=2000,
+                message="Description should be 2000 characters max"
+                )
             ],
         render_kw={
             "class": "form-control",
