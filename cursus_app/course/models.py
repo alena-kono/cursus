@@ -161,16 +161,29 @@ class Course(db.Model):
         return tutors
 
     @staticmethod
-    def get_courses_by_tutor(tutor_id: int) -> list:
+    def get_courses_by_tutor(
+            tutor_id: int, sort_by_published_at: bool = True) -> list:
         """Gets list of all courses by `User` with
         `tutor_id` from database.
+
+        :param tutor_id: User.id of a tutor
+        :type: int
+
+        :param sort_by_published_at: when True courses get sorted
+        by :attr:`Course.published_at`, otherwise by `Course.created_at`
+        :type: bool
 
         :returns: list of `Courses` instances
         :rtype: list
         """
-        courses_by_tutor = Course.query.filter(
-            Course.tutor == tutor_id).order_by(
-                Course.published_at.desc()).all()
+        if sort_by_published_at:
+            courses_by_tutor = Course.query.filter(
+                Course.tutor == tutor_id).order_by(
+                    Course.published_at.desc()).all()
+        else:
+            courses_by_tutor = Course.query.filter(
+                Course.tutor == tutor_id).order_by(
+                    Course.created_at.desc()).all()
         return courses_by_tutor
 
     def get_all_lessons(self) -> list:

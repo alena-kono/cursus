@@ -29,7 +29,10 @@ def page_not_found(error):
 @login_required
 def index():
     page_title = "Tutorboard - Cursus"
-    all_courses = Course.query.filter(Course.tutor == current_user.id).all()
+    all_courses = Course.get_courses_by_tutor(
+        tutor_id=current_user.id,
+        sort_by_published_at=False
+    )
     return render_template(
         "tutorboard/index.html",
         page_title=page_title,
