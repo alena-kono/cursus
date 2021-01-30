@@ -108,7 +108,7 @@ def lessons_in_course(course_id):
 def lesson(course_id: int, lesson_id: int):
     page_title = "Lesson"
     lesson = Lesson.query.get(lesson_id)
-    if lesson:
+    if lesson and lesson.course == course_id:
         page_title = f"Lesson {lesson.index} - {lesson.title}"
         return render_template(
             "course/lesson.html",

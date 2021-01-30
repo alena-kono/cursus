@@ -160,7 +160,7 @@ def lesson(course_id: int, lesson_id: int):
     page_title = "Tutorboard - Lesson"
     lesson = Lesson.query.get(lesson_id)
     form = NewLessonForm()
-    if lesson:
+    if lesson and lesson.course == course_id:
         page_title = f"Lesson {lesson.index} - {lesson.title}"
         return render_template(
             "tutorboard/lesson.html",
